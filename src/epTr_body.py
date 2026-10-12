@@ -47,13 +47,13 @@ def hudT(d,T):
     rect(d,150,160,570,176,fill=(50,54,66),out=None,w=0,rad=8)
     rect(d,150,160,150+max(6,int(420*n/100)),176,fill=col,out=None,w=0,rad=8)
     if 8.5<=T:
-        u=smooth(min(1,(T-8.5)/0.3)); w_=130*u
+        u=smooth(min(1,(T-8.5)/0.3)); w_=max(16,130*u)
         rect(d,360-w_,300,360+w_,740,fill=(20,22,30),w=7,rad=26)
         rect(d,360-w_+10,320,360+w_-10,720,fill=(30,34,50),out=None,w=0,rad=14)
         if u>0.9:
             text(d,(360,350),'EN DIRECTO',26,(255,70,70))
             v=int(min(10000000,2300*math.exp((T-8.5)*1.9)))
-            text(d,(360,470),(format(v,',').replace(',','.')),60,(255,255,255)); text(d,(360,520),'visualizaciones',26,(190,196,212))
+            text(d,(360,470),(format(v,',').replace(',','.')),40,(255,255,255)); text(d,(360,520),'visualizaciones',26,(190,196,212))
             for i in range(5):
                 q=((T*1.3+i/5)%1); text(d,(260+i*40+10*math.sin(T*5+i),700-q*300),'♥',40+int(14*q),(255,60,100))
 def camT(T):
