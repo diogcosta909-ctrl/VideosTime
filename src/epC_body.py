@@ -1,91 +1,158 @@
-DOORS=[(2.4,3.0,3.0,3.4,'brick'),(5.2,5.6,6.2,6.5,'pit'),(8.6,9.0,9.6,10.0,'sky'),(11.4,11.8,12.4,12.7,'lobby')]
-def doorinfo(T):
-    for a,b,c,d_,k in DOORS:
-        if a<=T<d_: return k,(smooth((T-a)/(b-a)) if T<c else 1-smooth((T-c)/(d_-c)))
-    return None,0.0
-def dispC(T):
-    if T<2.0: return '1'
-    if T<3.4: return '2'
-    if T<5.2: return str(2-min(5,int((T-3.4)/1.8*6)))
-    if T<6.5: return '-3'
-    if T<8.6: return str(-3+min(102,int((T-6.5)/2.1*102)))
-    if T<10.0: return '99'
-    if T<11.4: return str(99-int((T-10)/1.4*98))
-    if T<12.7: return '1'
-    return '2'
+setbg('room',(1.0,0.97,0.92))
+tVer=7.0; tAge=8.4; tSk=12.4; tOk=13.4; tExp=14.4
+def attempt(T):
+    # returns (k, u) attempt index and progress
+    if T<1.2: return 0,0.0
+    if T<5.0:
+        k=int((T-1.2)/0.95); return k+1,((T-1.2)-k*0.95)/0.95
+    if T<tVer:
+        k=int((T-5.0)/0.2); return 5+k,((T-5.0)-k*0.2)/0.2
+    return 99,0.0
+def nint(T):
+    if T<1.2: return 0
+    k,u=attempt(T)
+    if T<tVer: return k-1+(1 if u>0.7 else 0) if T<5.0 else int(lerp(4,47,(T-5.0)/(tVer-5.0)))
+    return 47
+def years(T):
+    if T<tAge: return 0
+    if T<tSk: return int(lerp(0,60,(T-tAge)/(tSk-tAge)))
+    return 60
+PROMPTS=['semáforos','autobuses','bicicletas','escaleras','pasos de cebra','motos','puentes']
 def stC(T):
-    if T<1.2: return (170,796),0.05,((-1.4+0.25*math.sin(T*25),-1.55),(0.1,0.0)),STAND,'run'
-    if T<2.4: return (240,806+4*math.sin(T*40)),0.0,((0.9,1.7),(-0.9,-1.7)),((0.5,-0.4),(-0.5,0.4)),'shock'
-    if T<3.4: return stand(240,'wtf')
-    if T<5.2:
-        u=smooth((T-3.4)/0.5); y=796-130*u+8*math.sin(T*6)
-        return (240+10*math.sin(T*3),y),0.1*math.sin(T*4),((PI-0.5,PI-0.2),(PI+0.5,PI+0.2)),((0.25+0.1*math.sin(T*9),0.3),(-0.2,0.2)),'shock'
-    if T<5.6:
-        u=smooth((T-5.2)/0.4); return (240,lerp(666,796,u)),0.0,((PI-0.5,PI-0.2),(PI+0.5,PI+0.2)),STAND,'shock'
-    if T<6.5: return stand(240,'shock')
-    if T<8.6: return (240+3*math.sin(T*50),816),0.0,((0.9,1.7),(-0.9,-1.7)),((0.6,-0.5),(-0.6,0.5)),'dead' if int(T*6)%2 else 'shock'
-    if T<10.0: return stand(240,'wtf')
-    if T<11.4: return stand(240+2*math.sin(T*30),'run')
-    if T<11.9: return stand(240,'happy')
-    if T<12.5: return fall((T-11.9)/0.6,240,620,'shock')
-    if T<14.0: return lying(620)
-    if T<14.5: return tumble((T-14.0)/0.5,620,'wtf')
-    return stand(620,'wtf')
-def content(d,k,T):
-    x0,y0,x1,y1=400,560,660,932
-    if k=='brick':
-        rect(d,x0,y0,x1,y1,fill=(170,80,60),out=None)
-        for r in range(0,372,31):
-            line(d,[(x0,y0+r),(x1,y0+r)],w=3,col=(110,50,40))
-            for c in range(0,260,52): line(d,[(x0+c+(26 if (r//31)%2 else 0),y0+r),(x0+c+(26 if (r//31)%2 else 0),y0+r+31)],w=3,col=(110,50,40))
-        rect(d,450,700,610,760,fill=(255,230,120),w=4,rad=4); text(d,(530,730),'ENTRE PISOS',24)
-    elif k=='pit':
-        rect(d,x0,y0,x1,y1,fill=(14,10,16),out=None)
-        sh=4*math.sin(T*40)
-        for ex in (480,580): ell(d,(ex+sh,720),34,24,fill=(255,40,40),w=0); ell(d,(ex+sh,720),9,22,fill=(10,0,0),out=None)
-        for i in range(8): poly(d,[(430+i*28+sh,820),(444+i*28+sh,880),(458+i*28+sh,820)],(255,255,255),2)
-    elif k=='sky':
-        rect(d,x0,y0,x1,y1,fill=(110,190,255),out=None)
-        for cx,cy,r in ((480,700,40),(560,740,52),(450,820,34),(620,860,44)): circ(d,(cx,cy),r,fill=(255,255,255),out=None)
-        px=lerp(700,300,(T-8.6)/1.4); rect(d,px,640,px+70,664,fill=(240,240,250),w=4,rad=10); poly(d,[(px+35,650),(px+50,610),(px+62,650)],(240,240,250),3); circ(d,(px+14,652),5,fill=(120,170,230),w=2)
-        rect(d,x0+30,590,x0+150,630,fill=(255,230,120),w=4,rad=4); text(d,(x0+90,610),'PISO 99',24)
+    if T<1.2: return stand(190,'happy',arms=((1.35+0.1*math.sin(T*20),1.5),(1.25,1.4)))
+    if T<2.1: return stand(190,'happy',lean=0.06,arms=((1.4,1.5),(1.3,1.5+0.2*math.sin(T*14))))
+    if T<3.0: return stand(170,'shock',lean=-0.15,y=796-6*abs(math.sin(T*12)),arms=((PI-0.7,PI-0.4),(PI-0.6,PI-0.3)))
+    if T<3.5: return stand(190,'wtf',lean=0.12,arms=((1.4,1.5),(1.3,1.5+0.2*math.sin(T*14))))
+    if T<3.8: return stand(180,'wtf',lean=-0.25,arms=((PI-0.2,PI-0.3),(PI-0.3,PI-0.2)))
+    if T<4.1: return stand(200,'wtf',lean=0.35,y=796+14,arms=((2.3,2.6),(2.1,2.5)))
+    if T<5.0: return stand(170+5*math.sin(T*30),'wtf',lean=-0.2,y=796-5*abs(math.sin(T*20)),arms=((PI-0.35,PI-1.9),(PI-0.45,PI-1.8)))
+    if T<tVer: return stand(200+3*math.sin(T*40),'shock',lean=0.2,y=796-6*abs(math.sin(T*30)),arms=((1.4+0.25*math.sin(T*45),1.5),(1.3-0.25*math.sin(T*45),1.5)))
+    if T<tAge: return stand(200,'shock',lean=0.15+0.01*math.sin(T*60),arms=((1.4,1.5),(1.3,1.45)))
+    a=(T-tAge)/(tSk-tAge)
+    if T<tSk: return stand(200,'dead' if a>0.5 else 'shock',lean=0.15+0.5*a,y=796+25*a,arms=((1.4+0.3*a,1.5),(1.3+0.3*a,1.45)))
+    return None
+def skeleton(d,T,jaw=0.0):
+    sh=0 if T<tSk+0.0 else 0
+    hip=(190,800); sk=(300,735)
+    for col,w in ((BK,14),((250,250,250),7)):
+        line(d,[hip,(235,775),sk],w=w,col=col)
+        for i in range(4):
+            y=790-i*14; xx=200+i*20
+            line(d,[(xx-16,y),(xx+22,y-8)],w=w-1,col=col)
+        line(d,[(235,770),(330,805)],w=w,col=col); line(d,[(250,775),(345,810)],w=w,col=col)
+        line(d,[hip,(170,932)],w=w,col=col); line(d,[hip,(215,932)],w=w,col=col); line(d,[(170,932),(150,932)],w=w,col=col); line(d,[(215,932),(238,932)],w=w,col=col)
+    circ(d,(190,800),12,fill=(250,250,250),w=4)
+    circ(d,sk,36,fill=(250,250,250),w=5)
+    ell(d,(sk[0]+26,sk[1]+22+jaw),16,8+jaw*0.4,fill=(250,250,250),w=4)
+    circ(d,(sk[0]-8,sk[1]-4),9,fill=BK,out=None); circ(d,(sk[0]+14,sk[1]-4),9,fill=BK,out=None)
+    poly(d,[(sk[0]+4,sk[1]+8),(sk[0]+10,sk[1]+8),(sk[0]+7,sk[1]+15)],BK,2)
+def screen(d,T):
+    X0,Y0,X1,Y1=380,520,690,770
+    rect(d,X0-10,Y0-10,X1+10,Y1+10,fill=(40,44,56),w=6,rad=10)
+    rect(d,X0,Y0,X1,Y1,fill=(250,250,252),out=None,w=0)
+    rect(d,515,775,555,800,fill=(90,94,106),w=4); rect(d,480,796,590,806,fill=(90,94,106),w=4,rad=4)
+    if T<tVer:
+        k,u=attempt(T)
+        rect(d,X0,Y0,X1,Y0+36,fill=(60,120,230),out=None,w=0)
+        text(d,(535,Y0+10),'Selecciona todos los',13,(255,255,255)); text(d,(535,Y0+26),PROMPTS[k%7].upper() if k else 'SEMÁFOROS',17,(255,255,255))
+        rng_=np.random.default_rng(k*7+1)
+        sel=rng_.integers(0,2,9) if k else np.zeros(9,int)
+        for i in range(9):
+            cx=X0+22+(i%3)*(88); cy=Y0+48+(i//3)*58
+            on=(sel[i] and u>0.08+i*0.06) if k else False
+            rect(d,cx,cy,cx+84,cy+54,fill=(206,214,226) if not on else (150,190,250),w=3 if on else 2,rad=4)
+            circ(d,(cx+42,cy+26),9,fill=(240,200,60) if i%3==0 else ((90,200,120) if i%3==1 else (230,90,90)),w=2)
+        if u>0.7 and k:
+            rect(d,X0,Y1-34,X1,Y1,fill=(230,60,60),out=None,w=0); text(d,(535,Y1-17),'✖ Inténtalo de nuevo',20,(255,255,255))
+        else:
+            rect(d,X1-110,Y1-32,X1-10,Y1-6,fill=(60,120,230),w=3,rad=6); text(d,(X1-60,Y1-19),'VERIFICAR',14,(255,255,255))
+    elif T<tOk:
+        rect(d,X0,Y0,X1,Y1,fill=(245,246,250),out=None,w=0)
+        a=T*8; 
+        for i in range(8):
+            an=a+i*PI/4; circ(d,(535+48*math.cos(an),640+48*math.sin(an)),9-i*0.8 if 9-i*0.8>1 else 1,fill=(60,120,230),out=None)
+        text(d,(535,720),'Verificando…',26,(60,70,90))
+    elif T<tExp:
+        rect(d,X0,Y0,X1,Y1,fill=(225,248,232),out=None,w=0)
+        circ(d,(535,630),56,fill=(60,190,110),w=6); line(d,[(510,630),(528,652),(565,606)],w=12,col=(255,255,255))
+        text(d,(535,715),'✔ Verificado',30,(30,120,70))
     else:
-        rect(d,x0,y0,x1,y1,fill=(238,226,200),out=None); rect(d,x0,900,x1,932,fill=(190,170,140),out=None)
-        rect(d,440,620,540,680,fill=(255,230,120),w=4,rad=4); text(d,(490,650),'PISO 1',30)
-        rect(d,420,780,470,900,fill=(120,170,100),w=4,rad=6)
-        text(d,(580,760),'ESCALERAS →',22)
+        rect(d,X0,Y0,X1,Y1,fill=(252,230,230),out=None,w=0)
+        text(d,(535,610),'Tu sesión ha',30,(170,30,40)); text(d,(535,650),'caducado',38,(170,30,40))
+        rect(d,455,690,615,735,fill=(60,120,230),w=4,rad=8); text(d,(535,712),'Iniciar sesión',20,(255,255,255))
 def worldC(d,T):
-    rect(d,-10,-300,730,932,fill=(150,156,172),out=None)
-    for x in range(0,730,90): line(d,[(x,0),(x,932)],w=3,col=(128,134,150))
-    rect(d,-10,932,730,1700,fill=(80,84,98),out=None); line(d,[(-10,932),(730,932)],w=6)
-    # button panel (left)
-    rect(d,24,620,110,820,fill=(60,64,80),w=5,rad=10)
-    for i,(yy_,lab) in enumerate(((650,'3'),(700,'2'),(750,'1'),(800,'-3'))): circ(d,(67,yy_),16,fill=(255,230,120) if lab=='2' else (200,200,210),w=3); text(d,(67,yy_),lab,18)
-    # display
-    rect(d,450,470,610,540,fill=(14,14,20),w=5,rad=6); text(d,(530,505),dispC(T),48,(255,70,60) if T<12.7 else (120,255,140))
-    if T>=12.9: text(d,(530,560-18),':)',30,(120,255,140))
-    # doors + content
-    k,o=doorinfo(T)
-    rect(d,396,556,664,932,fill=(40,44,56),w=5,rad=2)
-    if k: content(d,k,T)
-    dw=130*(1-o)
-    rect(d,400,560,400+dw,932,fill=(205,210,220),w=5,rad=0); rect(d,660-dw,560,660,932,fill=(205,210,220),w=5,rad=0)
-    s=stC(T); look=-1 if T<1.2 else 1
-    hd=drawpil(d,s,look)
-    if 12.5<=T<14.0: stars(d,hd,T)
-    if 5.4<=T<5.9 and False: pass
+    line(d,[(-20,932),(740,932)],w=6)
+    wd=(T>=tAge and T<tSk and int(T*4)%2==1)
+    rect(d,40,400,200,560,fill=(40,50,90) if wd else (200,225,245),w=6,rad=8)
+    if wd: circ(d,(120,470),22,fill=(240,240,200),w=3)
+    else: circ(d,(150,450),22,fill=(255,220,90),w=3)
+    ds=0
+    if 3.8<=T<4.0: ds=-10*math.sin(PI*(T-3.8)/0.2)
+    rect(d,300,810+ds,720,826+ds,fill=(150,110,80),w=6,rad=4); rect(d,320,826,336,932,fill=(130,95,68),w=5); rect(d,684,826,700,932,fill=(130,95,68),w=5)
+    ph=0
+    s=stC(T)
+    if T<tSk:
+        hip,lean,arms,legs,fc=s; hs=hands(hip,lean,arms)
+        hd=drawpil(d,s)
+        # beard & gray
+        if T>=tAge:
+            a=min(1,(T-tAge)/(tSk-tAge))
+            poly(d,[(hd[0]-26,hd[1]+14),(hd[0]+26,hd[1]+14),(hd[0]+4,hd[1]+14+110*a)],(225,225,230),4)
+            for i in range(5): line(d,[(hd[0]-14+i*8,hd[1]-34),(hd[0]-14+i*8,hd[1]-52-4*a)],w=4,col=(190,190,200))
+        # rage
+        if 3.5<=T<5.0 or 5.0<=T<tVer:
+            for i in range(3):
+                q=((T*2+i/3)%1); circ(d,(hd[0]+40+i*18,hd[1]-60-q*70),12+q*10,fill=(235,235,240,160),out=None)
+            line(d,[(hd[0]-6,hd[1]-60),(hd[0]+4,hd[1]-48)],w=5,col=(230,40,50)); line(d,[(hd[0]+4,hd[1]-60),(hd[0]-6,hd[1]-48)],w=5,col=(230,40,50))
+        if 5.0<=T<tAge:
+            for i in range(4):
+                q=((T*3+i/4)%1); ell(d,(hd[0]-40-i*12,hd[1]-10-q*30+q*q*60),6,10,fill=(120,200,255),w=2)
+        if 2.1<=T<3.0:
+            ell(d,(hd[0]-14,hd[1]-4),12+6*math.sin(T*30),16+6*math.sin(T*30),fill=(255,255,255),w=3); circ(d,(hd[0]-14,hd[1]-4),4,fill=BK,out=None)
+        if T>=tAge:
+            for i in range(10):
+                x=60+((i*97+T*40)%640); y=850+(i*37)%70; circ(d,(x,y),3,fill=(190,190,190),out=None)
+            c=min(1,(T-tAge)/3.0)
+            line(d,[(300,810),(300+60*c,810-80*c)],w=2,col=(200,200,205)); line(d,[(300,810),(300+90*c,810-30*c)],w=2,col=(200,200,205)); line(d,[(300,810),(300+30*c,810-110*c)],w=2,col=(200,200,205))
+    else:
+        jw=0 if T<tExp+0.2 else min(26,(T-tExp-0.2)*80)
+        skeleton(d,T,jw)
+        c=1
+        for pts in (((300,810),(360,730)),((300,810),(390,780)),((300,810),(330,700)),((720,520),(660,560)),((720,520),(700,610))):
+            line(d,list(pts),w=2,col=(200,200,205))
+        for i in range(10):
+            x=60+((i*97+T*20)%640); y=850+(i*37)%70; circ(d,(x,y),3,fill=(190,190,190),out=None)
+    screen(d,T)
 def hudC(d,T):
-    pill(d,110,610,[(150,128,'OBJETIVO',24,(190,196,212),'lm'),(150,160,'PISO 2',34,YEL,'lm'),(380,150,'AHORA',22,(150,156,172),'lm'),(540,150,dispC(T),64,(255,110,100),'mm')])
+    if T<tAge:
+        n=nint(T)
+        pill(d,110,610,[(150,128,'INTENTOS',20,(190,196,212),'lm'),(560,140,str(n),56,(255,255,255) if n<20 else (255,90,80),'rm'),(150,166,'¿eres un robot?',20,(150,156,172),'lm')])
+    else:
+        y=years(T)
+        pill(d,110,610,[(150,128,'AÑOS',22,(190,196,212),'lm'),(560,140,str(y),56,(255,200,60),'rm'),(150,166,'verificando…',20,(150,156,172),'lm')])
 def camC(T):
-    if T<0.25: return 1.2-0.2*(T/0.25),120,800+OFF
-    if 2.4<=T<2.8: return 1+0.3*ease((T-2.4)/0.3),520,560+OFF
-    if 5.2<=T<6.2: return 1.3,520,740+OFF
-    if 8.6<=T<9.4: return 1.25,520,720+OFF
-    if 12.2<=T<13.0: return 1+0.2*ease((T-12.2)/0.4),460,800+OFF
+    if 1.2<=T<5.0:
+        u=smooth(min(1,(T-1.2)/0.4)); return lerp(1,1.12,u),lerp(360,370,u),lerp(640,690,u)
+    if 5.0<=T<tVer:
+        u=smooth((T-5.0)/2.0); return 1.12+0.18*u,lerp(370,400,u),690
+    if tVer<=T<tAge:
+        u=smooth((T-tVer)/1.2); return 1.3+0.7*u,lerp(400,520,u),lerp(690,650,u)
+    if tAge<=T<tAge+0.5:
+        u=smooth((T-tAge)/0.5); return lerp(2.0,1.0,u),lerp(520,360,u),lerp(650,700,u)
+    if tOk<=T<tExp:
+        u=smooth((T-tOk)/0.4); return lerp(1.0,2.2,u),lerp(360,535,u),lerp(700,650,u)
+    if tExp<=T<tExp+0.6:
+        u=ease((T-tExp)/0.3) if T<tExp+0.3 else 1; return 2.2+0.6*u,535,650
+    if T>=tExp+0.6:
+        u=smooth((T-tExp-0.6)/1.2); return lerp(2.8,1.15,u),lerp(535,400,u),lerp(650,700,u)
     return 1,360,640
-CC=dict(name='epC',world=worldC,hud=hudC,cam=camC,EV=[2.4,5.2,8.6,11.4],flash=[2.4,5.2,8.6,11.4],freeze=(5.35,5.6),
- shakes=[(1.2,2.4,7),(3.4,5.2,10),(6.5,8.6,12),(10.0,11.4,8),(11.95,12.4,18)],speed=[(3.4,3.8),(6.5,6.9)],
- caps=[(0,1.2,'Solo quiero ir al piso 2'),(1.2,2.4,'Sube…'),(2.4,3.4,'Piso 2: entre pisos'),(3.4,5.2,'Ahora baja'),(5.2,6.5,'Sótano -3'),(6.5,8.6,'Ahora sube. Mucho'),(8.6,10.0,'Piso 99'),(10.0,11.4,'Casi…'),(11.4,12.5,'Piso 1. Otra vez'),(12.5,14.0,'Me ha echado'),(14.0,15.1,'El ascensor gana')],
- pops=[(2.4,3.0,'¡DING!',330,100,YEL),(5.3,6.0,'¡ROAAAR!',330,100,RED),(8.8,9.4,'¡FIUUUM!',330,86,(150,215,255)),(11.95,12.6,'¡PTUI!',330,100,RED)],
- Ts=(0.2,0.8,1.5,2.2,2.6,3.2,4.0,4.8,5.3,5.45,5.8,6.4,7.4,8.2,8.8,9.3,10.4,11.6,12.2,13.0,14.6))
+def postC(img,T):
+    if T>=16.5:
+        k=max(0.0,1-(T-16.5)/0.5); return Image.fromarray((np.asarray(img,np.float32)*k).astype(np.uint8))
+    return img
+CC=dict(name='epC',DUR=17.0,beats=[(1.2,5.0)],speed=[(5.0,tVer)],world=worldC,hud=hudC,cam=camC,post=postC,
+ EV=[1.2,2.1,3.0,3.8,5.0,tVer,tAge,tSk,tOk,tExp],flash=[3.8,5.0,tVer,tAge,tSk,tOk,tExp],freeze=(tOk+0.0,tOk+0.2),shakes=[(3.8,4.1,12),(tExp,tExp+0.4,14)],
+ caps=[(0,1.2,'Solo quiero entrar'),(1.2,2.1,'Semáforos'),(2.1,3.0,'¿Cómo que no?'),(3.0,3.8,'¿La esquina cuenta?'),(3.8,5.0,'¡Son semáforos!'),(5.0,tVer,'Intento 47'),(tVer,tAge,'Verificando…'),(tAge,tSk,'Sigue verificando…'),(tSk,tOk,'…'),(tOk,tExp,'¡Verificado!'),(tExp,17.1,'Sesión caducada.')],
+ pops=[(2.1,2.6,'¿¿QUÉ??',470,90,RED),(3.8,4.3,'¡¡ARGH!!',470,90,YEL)],
+ Ts=(0.6,1.8,2.5,3.4,3.9,4.6,5.8,6.6,7.7,9.0,10.5,11.8,12.9,13.8,14.8,16.0,16.7,1.9,3.7,8.5,14.5))
 run(CC)
