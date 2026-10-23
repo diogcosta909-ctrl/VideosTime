@@ -34,3 +34,33 @@ El nombre de la letra P ("pe") suena igual que la sílaba "pe". Por eso "P con E
 - Ortografía en pantalla correcta ("¿Cómo…?", "Sílabas", "Aprende a leer y escribir con Pinti").
 
 Fuente: páginas reales del libro, `pinti-organico/assets/paginas/pagina-21.jpg` y `pagina-24.jpg`. No se citan estudios externos.
+
+## Crítico — guion
+
+Revisado el guion con los cambios de la pedagoga ya aplicados. Lo he comparado con `assets/paginas/pagina-21.jpg`, `pagina-24.jpg`, `portada.jpg`, las ilustraciones (vaca, gato, Pepe), `BRIEF.md` y `memoria/reglas.md`. La sección Crítico está vacía y he aplicado las reglas del Guionista del 2026-10-23. `ganadores.md` y `aprendizajes.md` no tienen datos, así que uso el listón base. Todavía no hay vídeo, por lo que no he medido fotogramas ni loudness.
+
+Lo que he comprobado en los assets: los colores y las minúsculas de las tarjetas coinciden con las págs. 21 y 24 (ma naranja, me azul, mi verde, mo amarillo, mu rosa, pe azul). La fórmula sigue el formato "m + a = ma" / "p + a = pa". Los cuatro personajes existen en `ilustraciones/`. La portada lleva el título exacto y el sello "3–6 años".
+
+| # | Punto | Nota | Motivo |
+|---|---|---|---|
+| 1 | Gancho 0–1 s | 7 | No hay intro. Pinti y las tarjetas están desde el frame 0 y el choque "m"+"u" da movimiento inmediato. Pero el texto entra palabra a palabra: quien ve sin sonido solo lee "¿Cómo…" en el segundo 1. Es el mismo fallo que se devolvió en el ep. 01. La pregunta despierta curiosidad en el niño, pero no detiene al padre. El A/B 1 (vaca "¡MUUUU!" en el frame 0) tiene más fuerza para parar el scroll. |
+| 2 | Retención | 8 | Hay una recompensa cada 1–2,5 s (MUUU, mmm, gato, letras que caen, CUAC, pe·pe→Pepe) y la estructura en tres repeticiones con error deja anticipar el siguiente. El último frame enlaza con el primero. Riesgo: tres frases de Pinti no caben en su tramo a ritmo infantil (≈2,6 palabras/s). "¡Ahora, la letra de Pepe! ¿Cómo dice esta?" (8 palabras) necesita ≈3 s y tiene 2,4. "¡Nooo, Pepe! Dice… ¡pe! ¡Como tu nombre!" lleva pausas y tiene 2,6 s. "¿Tu hijo lo dice bien… o hace como Pepe?" (9 palabras con pausa) necesita ≈3,4 s y tiene 2,8. O se aceleran (y el niño no entiende) o se alarga la escaleta. |
+| 3 | Claridad del producto | 6 | El título solo aparece en pantalla al final. La voz dice "Lo encuentras…" sin decir qué es "lo": nunca se dice que es un libro para imprimir ni para qué edad. El "3–6 años" queda en un sello pequeño de la portada que además van a tapar los personajes que "se asoman alrededor". |
+| 4 | Emoción | 8 | El humor es tierno y los personajes son queribles. Que Pepe aprenda la sílaba de su propio nombre emociona de verdad. El padre se identifica con "¿o hace como Pepe?". |
+| 5 | Compartible/guardable | 7 | Los niños lo pedirían en bucle y la pregunta final invita a comentar. Pero nada pide guardarlo, y el truco del "mmm" (lo más útil para el padre) no se presenta como un truco que se pueda reutilizar. |
+| 6 | Cumplimiento del brief | 8 | Cumple: LATAM, sin precio, voces de niño y de animales separadas de la narradora, Liz solo en el CTA, sin fades, páginas reales, niveles de SFX y música fijados, CTA dentro de la zona segura. Falla: (a) **regla del 2026-10-23** ("las letras nunca giran ni se voltean"): en 8,6 "la cabecera gira como una tarjeta" y durante el giro "Sílabas con M" se ve espejada; en 6,9 la "a" y la "u" "caen rebotando", sin decir que no rotan. (b) La zona segura solo está definida para el CTA. El texto del gancho va "arriba" y la cabecera sin coordenadas, y arriba lo tapa la interfaz de TikTok y Reels. (c) "Pinti sale despeinado": Pinti es un crayón sin pelo, así que pide rediseñarlo. |
+
+**Media: (7 + 8 + 6 + 8 + 7 + 8) / 6 = 7,3** · Punto 6 = 8
+
+### Veredicto: DEVUELTO
+
+### Cambios concretos
+
+1. **Guionista: cambio M→P sin giro.** En 8,6, la cabecera "Sílabas con M" sale deslizándose hacia arriba y entra "Sílabas con P" desde abajo, con un pop de escala. Ninguna letra se voltea ni se espeja. En 6,9 la "a" y la "u" caen y rebotan **sin rotar**. Hay que escribirlo así en la escaleta.
+2. **Guionista: un CTA que diga qué es.** En 18,6, Liz dice: "Es un libro para imprimir, de 3 a 6 años. Link en mi perfil." (11 palabras, ≈4,2 s). En pantalla, sobre la portada: **Aprende a leer y escribir con Pinti** · **Libro imprimible · 3 a 6 años** · **Link en el perfil**. El vídeo pasa a ≈23 s, todavía dentro del rango.
+3. **Guionista: líneas que quepan.** En 8,6, "¡La letra de Pepe! ¿Cómo dice?" (≈2,3 s). En 15,8, "¿Tu hijo lo dice bien… o como Pepe?". Cuando estén las tomas TTS, la escaleta se ajusta a su duración real, sin cortar palabras ni acelerar.
+4. **Guionista y montaje: gancho legible sin sonido.** "¿Cómo suena la M con la U?" completo desde el frame 0, con resaltado karaoke sincronizado. Zona segura para todo el texto: y=250–1440 y margen derecho de 140 px, también para la cabecera y el gancho.
+5. **Guionista: que pida guardarlo.** En 15,8–18,6, solo en pantalla y pequeño bajo la pregunta: "Guárdalo: el truco del mmm sirve con ma, me, mi, mo, mu".
+6. **Animador:** en 1,8 Pinti no se "despeina": el viento lo inclina hacia atrás con squash y los ojos apretados. En el cierre, los personajes se asoman sin tapar el título ni el sello "3–6 años" de la portada.
+
+Nota (no bloquea): publicar primero el gancho principal y el A/B 1 (vaca en el frame 0) como test. Cuando vuelva el guion, se revisa otra vez. En el vídeo final se comprobará con ffmpeg el frame 0, la zona segura, que no haya fade, que ninguna letra salga espejada y el loudness (voz ≈ -14 LUFS, SFX 10–14 dB por debajo).

@@ -2,7 +2,9 @@
 
 ## Pedagogía
 
-**Veredicto: CORREGIR** (son cambios pequeños; el orden de los trazos de la M y la m está bien).
+**Veredicto final (2.ª revisión): CORREGIR**. Falta 1 cambio en la "a" de "Mamá" y una nota de coherencia (ver "2.ª revisión" al final). Los 4 cambios de la 1.ª revisión están bien aplicados.
+
+**Veredicto de la 1.ª revisión: CORREGIR** (eran cambios pequeños; el orden de los trazos de la M y la m ya estaba bien).
 
 He comparado el guion con `assets/paginas/pagina-20.jpg`.
 
