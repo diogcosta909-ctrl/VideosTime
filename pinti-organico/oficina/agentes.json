@@ -1,0 +1,76 @@
+{
+ "analista": {
+  "actualizado": "2026-10-23T20:12:00Z",
+  "estado": "libre",
+  "tarea": ""
+ },
+ "animador": {
+  "actualizado": "2026-10-23T19:55:00Z",
+  "estado": "libre",
+  "tarea": ""
+ },
+ "arte": {
+  "actualizado": "2026-10-23T22:15:00Z",
+  "episodio": "pinti_org_01_b_d",
+  "estado": "error",
+  "tarea": "Interrumpido por un reinicio: se reanuda"
+ },
+ "community": {
+  "actualizado": "2026-10-23T20:12:00Z",
+  "estado": "libre",
+  "tarea": ""
+ },
+ "creativo": {
+  "actualizado": "2026-10-23T20:36:00Z",
+  "archivo": "https://github.com/tryingalwaysboom/VideosTime/blob/main/pinti-organico/episodios/2026-10-23_ideas.md",
+  "episodio": "tanda_2026-10-23",
+  "estado": "listo",
+  "tarea": "8 ideas y 12 virales encontrados"
+ },
+ "critico": {
+  "actualizado": "2026-10-23T22:15:00Z",
+  "episodio": "pinti_org_01_b_d",
+  "estado": "listo",
+  "tarea": "3 guiones aprobados"
+ },
+ "estratega": {
+  "actualizado": "2026-10-23T20:40:00Z",
+  "archivo": "https://github.com/tryingalwaysboom/VideosTime/blob/main/pinti-organico/episodios/2026-10-23_plan.md",
+  "episodio": "tanda_2026-10-23",
+  "estado": "listo",
+  "tarea": "3 ideas elegidas: b/d, MUUU, ASMR de la M"
+ },
+ "guionista": {
+  "actualizado": "2026-10-23T22:15:00Z",
+  "episodio": "tanda_2026-10-23",
+  "estado": "listo",
+  "tarea": "3 guiones aprobados"
+ },
+ "montaje": {
+  "actualizado": "2026-10-23T19:55:00Z",
+  "estado": "libre",
+  "tarea": ""
+ },
+ "pedagoga": {
+  "actualizado": "2026-10-23T22:15:00Z",
+  "episodio": "pinti_org_02_silabas_animales",
+  "estado": "listo",
+  "tarea": "3 guiones revisados"
+ },
+ "productor": {
+  "actualizado": "2026-10-23T22:15:00Z",
+  "episodio": "tanda_2026-10-23",
+  "estado": "trabajando",
+  "tarea": "Moviendo la oficina a Railway"
+ },
+ "publicador": {
+  "actualizado": "2026-10-23T19:55:00Z",
+  "estado": "libre",
+  "tarea": ""
+ },
+ "sonido": {
+  "actualizado": "2026-10-23T19:55:00Z",
+  "estado": "libre",
+  "tarea": ""
+ }
+}

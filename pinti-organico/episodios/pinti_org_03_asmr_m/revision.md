@@ -64,3 +64,28 @@ Comprobado en la pág. 20: la M en 2 trazos y la m en 3 trazos con punto verde, 
 - **Sonido:** el susurro "mmm" debe ser una toma aparte de Liz desde el principio, no un TTS de "Mmmm…", que suele sonar robótico. Hay que pedir 2 tomas y elegir la mejor. Al acortar el cierre, el "pop" del texto y el roce de página quedan bajo la voz, entre 10 y 14 dB por debajo.
 - **Montaje:** el frame 0 y el último tienen que coincidir en encuadre y pose. Se comprobará extrayendo ambos con ffmpeg y comparándolos.
 - **Verificación en vídeo final (crítico):** se extraerán el frame 0, los frames de 1,0 s, 3,3 s ("mmm"), 16,5 s (página completa) y 19,5 s (portada) y el último frame (sin negro y empalme del loop). Se medirán el loudness integrado de la voz (≈ -14 LUFS) y de la mezcla de SFX y room tone (10–14 dB por debajo), y que no haya silencio digital entre trazos.
+
+## Crítico — guion, ronda 2
+
+He revisado el guion v2 (~21,6 s) contra la ronda 1, la pág. 20 y el `BRIEF.md`. Los 6 cambios están aplicados.
+
+**Frase de cierre "Libro imprimible, de 3 a 6 años. Así practica solito.":** no promete nada (ni plazos, ni "aprenderá a leer", ni compara con otros niños) y no nombra ninguna letra en voz. "3 a 6" va escrito como "tres a seis" en el TTS. En todo el vídeo, la única referencia a la letra en voz es el sonido "mmm", y eso cumple la regla del Guionista. Sin precio. Es LATAM neutro.
+
+| # | Punto | Nota | Motivo |
+|---|---|---|---|
+| 1 | Gancho 0–1 s | 8 | "La M, trazo a trazo" se ve entero desde el frame 0, junto al macro de la M real con el trazo ya en marcha. Se entiende sin sonido y "Sube el volumen" queda como complemento. Para un satisfying es suficiente. No llega a 9 porque no toca un dolor del padre: eso se mide con el A/B 3. |
+| 2 | Retención | 8 | De 0 a 16 s hay un trazo o un cambio cada 0,4–1,1 s. El cierre dura 3,8 s y el puente de loop 1,8 s, con movimiento constante. |
+| 3 | Claridad del producto | 8 | Voz y pantalla dicen "Libro imprimible · 3 a 6 años". Aparecen el título exacto sobre la portada recta y la pág. 20 legible. |
+| 4 | Emoción | 7 | Es tierno (el crayón se relame con el "mmm", la mamá parpadea, las estrellas), pero sigue siendo más satisfacción que identificación. Es aceptable en un formato experimental. |
+| 5 | Compartible/guardable | 8 | "Guárdalo: la M en el orden correcto" sale en el momento de más utilidad y el bucle se presta a revisionados. |
+| 6 | Cumplimiento del brief | 10 | LATAM, sin precio, sin voces de niño (no hay frases de niño), Liz solo en el susurro y el cierre, sin fades, corte seco al frame 0, zona segura y=250–1440 con margen de 140 px, nada gira (portada en plano, sin tilt), página real fiel y coherente con el loop, scratch por trazo, niveles fijados y room tone para evitar silencio digital. |
+
+**Media: (8 + 8 + 8 + 7 + 8 + 10) / 6 = 8,2** · Punto 6 = 10
+
+### Veredicto: APROBADO
+
+### Notas (no bloquean)
+- **Sonido:** "Libro imprimible, de tres a seis años" son unas 12 sílabas, que a ritmo cálido ocupan unos 2,2 s. No cabe en 16,1–17,6 (1,5 s). La voz debe ir seguida de 16,1 a 19,6, y el punto de corte entre las dos frases se fija con la duración real de la toma, sin acelerarla. Recomiendo grabar también **"Así practica tu hijo, solito."** (la versión validada por la pedagoga, ≈1,9 s). Sin "tu hijo" puede parecer que el que practica es Pinti. Si cabe en 19,6, se usa esa.
+- **Montaje:** el texto tiene que ir sincronizado con la voz. "Libro imprimible · 3 a 6 años" debe estar en pantalla cuando Liz lo dice: o se sustituye "Página 20" (y≈300) por esa línea desde 16,1, o la portada entra en cuanto empieza la frase. Las tres líneas de la portada no pueden tapar el título impreso de la portada ni a Pinti. Si no caben en y=1150–1400, se reduce la portada.
+- **Animador:** la 5.ª M del bucle tiene que estar realmente sin trazar en todos los planos posteriores (página completa y portada). Pinti "se relame" con la boca de `pinti.png`, sin rediseñarlo. En el karaoke del gancho, el resaltado de "trazo a trazo" a 1,2 s no puede mover ni deformar el texto.
+- **Verificación en vídeo final (crítico):** con ffmpeg extraeré el frame 0, los frames de 1,0 s, 3,3 s, 11,0 s ("Guárdalo"), 16,8 s y 18,5 s y el último frame (sin negro, empalme con el frame 0). Mediré el loudness integrado de la voz (≈ -14 LUFS) y de SFX + room tone (10–14 dB por debajo) y comprobaré que no hay silencio digital entre trazos.
