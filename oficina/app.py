@@ -25,6 +25,7 @@ GITHUB_WEBHOOK_SECRET = os.environ.get("GITHUB_WEBHOOK_SECRET", "")
 OFICINA_TOKEN = os.environ.get("OFICINA_TOKEN", "")
 OFICINA_PASS = os.environ.get("OFICINA_PASS", "")
 SYNC_SECONDS = int(os.environ.get("SYNC_SECONDS", "60"))
+SYNC_GITHUB = os.environ.get("SYNC_GITHUB", "0") == "1"  # el equipo en Railway escribe directo en la base de datos
 
 app = Flask(__name__)
 _wake = threading.Event()
@@ -43,6 +44,12 @@ def init_db():
             create table if not exists hallazgos (id text primary key, datos jsonb not null, ts text not null default '');
             create table if not exists meta (k text primary key, v text not null);
             insert into meta (k, v) values ('rev', '0') on conflict do nothing;
+            create table if not exists tandas (id serial primary key, n int not null default 3, tema text not null default '',
+                estado text not null default 'pendiente', nota text not null default '', coste_usd numeric not null default 0,
+                creada timestamptz default now(), actualizada timestamptz default now());
+            create table if not exists aprobaciones (id serial primary key, tanda_id int, tipo text not null, titulo text not null,
+                detalle jsonb not null default '{}', creditos int not null default 0, estado text not null default 'pendiente',
+                creada timestamptz default now(), respondida timestamptz);
         """)
 
 
@@ -122,7 +129,8 @@ def bucle():
 
 
 init_db()
-threading.Thread(target=bucle, daemon=True).start()
+if SYNC_GITHUB:
+    threading.Thread(target=bucle, daemon=True).start()
 
 
 @app.before_request
@@ -149,7 +157,44 @@ def estado():
         agentes = {r[0]: r[1] for r in c.execute("select id, datos from agentes")}
         eventos = [r[0] for r in c.execute("select datos from eventos order by ts desc, id desc limit 60")]
         hallazgos = [r[0] for r in c.execute("select datos from hallazgos order by ts desc, id desc limit 150")]
-    return jsonify(rev=rev, agentes=agentes, eventos=eventos, hallazgos=hallazgos)
+        tandas = [dict(id=r[0], n=r[1], tema=r[2], estado=r[3], nota=r[4], coste_usd=float(r[5]))
+                  for r in c.execute("select id, n, tema, estado, nota, coste_usd from tandas order by id desc limit 5")]
+        aprob = [dict(id=r[0], tanda_id=r[1], titulo=r[2], detalle=r[3], creditos=r[4], estado=r[5])
+                 for r in c.execute("select id, tanda_id, titulo, detalle, creditos, estado from aprobaciones "
+                                    "order by id desc limit 5")]
+    return jsonify(rev=rev, agentes=agentes, eventos=eventos, hallazgos=hallazgos, tandas=tandas, aprobaciones=aprob)
+
+
+@app.post("/api/tanda")
+def nueva_tanda():
+    p = request.get_json(force=True, silent=True) or {}
+    n = max(1, min(int(p.get("n") or 3), 6))
+    tema = str(p.get("tema") or "")[:200]
+    with db() as c:
+        if c.execute("select 1 from tandas where estado in ('pendiente','en_curso')").fetchone():
+            return jsonify(error="Ya hay una tanda en marcha"), 409
+        tid = c.execute("insert into tandas (n, tema) values (%s, %s) returning id", (n, tema)).fetchone()[0]
+        bump(c)
+    return jsonify(id=tid)
+
+
+@app.post("/api/tanda/<int:tid>/cancelar")
+def cancelar_tanda(tid):
+    with db() as c:
+        c.execute("update tandas set estado = 'cancelada' where id = %s and estado in ('pendiente','en_curso')", (tid,))
+        c.execute("update aprobaciones set estado = 'rechazada', respondida = now() where tanda_id = %s and estado = 'pendiente'", (tid,))
+        bump(c)
+    return jsonify(ok=True)
+
+
+@app.post("/api/aprobar/<int:aid>")
+def aprobar(aid):
+    p = request.get_json(force=True, silent=True) or {}
+    nuevo = "aprobada" if p.get("ok") else "rechazada"
+    with db() as c:
+        c.execute("update aprobaciones set estado = %s, respondida = now() where id = %s and estado = 'pendiente'", (nuevo, aid))
+        bump(c)
+    return jsonify(estado=nuevo)
 
 
 @app.post("/webhook/github")

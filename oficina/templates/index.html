@@ -85,6 +85,17 @@ h2{font-family:var(--display);font-weight:500;font-size:20px;margin:0 0 10px}
 @media (prefers-reduced-motion:reduce){.live.on i{animation:none}.fc.new{animation:none}}
 </style>
 
+<style>
+.ctl{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:grid;gap:8px}
+.ctlrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ctl input,.ctl select{font:inherit;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.ctl input{flex:1;min-width:160px}
+.ctl button{font:inherit;font-weight:700;padding:9px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.ctl button.go,.ctl button.ok{background:var(--accent);border-color:var(--accent);color:#fff}
+.tinfo{font-size:13px;color:var(--muted)}
+.apr{border:2px solid var(--wait);border-radius:12px;padding:10px 12px;display:grid;gap:6px}
+.apr b{font-family:var(--display)}
+</style>
 </head><body>
 <div class="wrap">
   <header>
@@ -96,6 +107,17 @@ h2{font-family:var(--display);font-weight:500;font-size:20px;margin:0 0 10px}
   </header>
 
   <div class="summary" id="summary"></div>
+
+  <section class="ctl" id="ctl" aria-label="Control de la tanda">
+    <div class="ctlrow">
+      <label>Vídeos <select id="tN"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select></label>
+      <input id="tTema" type="text" placeholder="Tema opcional (ej. la letra P)" maxlength="120">
+      <button type="button" id="tGo" class="go">Nueva tanda</button>
+      <button type="button" id="tStop" hidden>Cancelar</button>
+    </div>
+    <div id="tInfo" class="tinfo"></div>
+    <div id="aprob"></div>
+  </section>
 
   <div class="stage" id="stage">
     <div class="loading" id="loading">Montando la oficina…</div>
@@ -123,7 +145,7 @@ h2{font-family:var(--display);font-weight:500;font-size:20px;margin:0 0 10px}
     </section>
     <section>
       <h2>Actividad</h2>
-      <div class="feed" id="feed"><p class="empty">Aún no hay actividad. Aparecerá aquí en cuanto lances una tanda con /pinti-viral.</p></div>
+      <div class="feed" id="feed"><p class="empty">Aún no hay actividad. Aparecerá aquí en cuanto pulses “Nueva tanda”.</p></div>
     </section>
   </div>
 </div>
@@ -211,7 +233,7 @@ function renderTeam(){
 $("#team").addEventListener("click",e=>{const b=e.target.closest(".agent");if(b&&!e.target.closest("a"))select(b.dataset.id)});
 function evHtml(e){const a=BYID[e.agente],to=BYID[e.a];
   return `<div class="ev"><span class="d" style="background:${a?a.col:"var(--idle)"}"></span><div>${a?`<b>${esc(a.name)}</b> `:""}${esc(e.texto)}${to?` → <b>${esc(to.name)}</b>`:""}${link(e.archivo)}<small>${ago(e.ts)}${e.episodio?" · "+esc(e.episodio):""}</small></div></div>`}
-function renderFeed(){$("#feed").innerHTML=state.events.length?state.events.slice(0,30).map(evHtml).join(""):'<p class="empty">Aún no hay actividad. Aparecerá aquí en cuanto lances una tanda con /pinti-viral.</p>'}
+function renderFeed(){$("#feed").innerHTML=state.events.length?state.events.slice(0,30).map(evHtml).join(""):'<p class="empty">Aún no hay actividad. Aparecerá aquí en cuanto pulses “Nueva tanda”.</p>'}
 function renderAll(){renderSummary();renderTeam();renderFeed();if(window.office)office.sync()}
 
 /* ---------- Oficina 3D ---------- */
@@ -540,6 +562,28 @@ function setLive(on,txt){$("#live").classList.toggle("on",!!on);$("#liveTxt").te
 
 /* ---------- Datos en vivo ---------- */
 let rev=null,seenEv=null,fallos=0;
+const tGo=document.getElementById("tGo"),tStop=document.getElementById("tStop"),tInfo=document.getElementById("tInfo"),aprobEl=document.getElementById("aprob");
+let tandaActiva=null;
+async function post(u,b){const r=await fetch(u,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b||{})});return r.json().catch(()=>({}))}
+tGo.onclick=async()=>{tGo.disabled=true;const r=await post("/api/tanda",{n:+document.getElementById("tN").value,tema:document.getElementById("tTema").value});if(r.error)alert(r.error);tGo.disabled=false;rev=null};
+tStop.onclick=async()=>{if(tandaActiva&&confirm("¿Cancelar la tanda?")){await post("/api/tanda/"+tandaActiva+"/cancelar");rev=null}};
+function pintaControl(d){
+  const t=(d.tandas||[])[0];const viva=t&&(t.estado==="pendiente"||t.estado==="en_curso");
+  tandaActiva=viva?t.id:null;tGo.hidden=!!viva;tStop.hidden=!viva;
+  tInfo.textContent=t?`Tanda ${t.id}: ${t.estado}${t.nota?" · "+t.nota:""} · gasto API ≈ ${t.coste_usd.toFixed(2)} $`:"Aún no hay tandas. Pulsa “Nueva tanda”.";
+  aprobEl.innerHTML="";
+  for(const a of (d.aprobaciones||[]).filter(x=>x.estado==="pendiente")){
+    const det=Object.entries(a.detalle||{}).map(([k,v])=>`${k}: ~${v.creditos} créditos`).join(" · ");
+    const el=document.createElement("div");el.className="apr";
+    el.innerHTML=`<b>Necesito tu OK</b><span></span><span>Total ≈ ${a.creditos} créditos de ElevenLabs. ${det}</span><div class="ctlrow"><button class="ok" type="button">Aprobar</button><button type="button">Rechazar</button></div>`;
+    el.querySelector("span").textContent=a.titulo;
+    const [ok,no]=el.querySelectorAll("button");
+    ok.onclick=async()=>{await post("/api/aprobar/"+a.id,{ok:true});rev=null};
+    no.onclick=async()=>{await post("/api/aprobar/"+a.id,{ok:false});rev=null};
+    aprobEl.appendChild(el);
+  }
+}
+
 async function connect(){
   try{
     const r=await fetch("/api/estado"+(rev?"?rev="+encodeURIComponent(rev):""),{cache:"no-store"});
@@ -551,7 +595,7 @@ async function connect(){
       if(seenEv&&window.office&&!reduce){for(const e of evs){if(!seenEv.has(e.id)&&BYID[e.agente]&&BYID[e.a])office.handoff(BYID[e.agente],BYID[e.a])}}
       seenEv=new Set(evs.map(e=>e.id));state.events=evs;
       state.finds=(d.hallazgos||[]).map(f=>Object.assign({_id:f.id},f));
-      renderAll();renderFinds();
+      pintaControl(d);renderAll();renderFinds();
     }
   }catch(e){fallos++;if(fallos>2)setLive(false,"Sin conexión con los datos, reintentando…")}
   setTimeout(connect,document.hidden?15000:3000);
