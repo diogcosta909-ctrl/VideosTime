@@ -8,12 +8,15 @@
 
 ## Decisión sobre Pepe y la "pe"
 
-**La uso.** Dentro de la M, Pepe no tiene una sílaba que le encaje. Con "pe" el chiste se cierra solo: Pepe no sabe leer la sílaba de su propio nombre. Para que no se mezclen la M y la P (pedagógicamente es el único riesgo):
-1. Pinti lo anuncia en voz ("Ahora la P") y en pantalla la cabecera cambia de forma visible: "Sílabas con M" pasa a "Sílabas con P".
-2. Las tarjetas de la M se apartan y entra sola la tarjeta azul "pe" de la pág. 24, con la fórmula "p + e = pe", que es el mismo formato que "m + a = ma" de la pág. 21.
-3. La corrección se ancla en algo que el niño ya conoce: su nombre. "PE·PE" se escribe con las dos sílabas "pe" resaltadas.
-4. Pinti dice siempre las sílabas cortas y limpias ("mu", "mi", "pe"). Lo largo o lo incorrecto ("MUUU", "MIAU", "CUAC") solo lo dicen los animales.
-5. El remate vuelve a la M (pág. 21 completa), así que el vídeo empieza y termina en la misma letra.
+**La uso.** Dentro de la M, Pepe no tiene una sílaba que le encaje. Con "pe" el chiste se cierra solo: Pepe no sabe leer la sílaba de su propio nombre. Para que no se mezclen la M y la P (revisado por la pedagoga):
+1. **El nombre de la letra P nunca se dice en voz.** "Pe" (el nombre de la letra) suena igual que la sílaba "pe" y confundiría al niño. Pinti dice "¡Ahora, la letra de Pepe!". La P solo aparece en pantalla: la cabecera cambia de forma visible de "Sílabas con M" a "Sílabas con P" y sale la fórmula "p + e = ?".
+2. Las tarjetas de la M se apartan y entra sola la tarjeta azul "pe" de la pág. 24, con la fórmula "p + e = pe" en pantalla, que es el mismo formato que "m + a = ma" de la pág. 21.
+3. La corrección se ancla en algo que el niño ya conoce, su nombre: "pe · pe" en minúscula azul (como la tarjeta) se une en "Pepe".
+4. Pinti dice siempre las sílabas cortas y limpias ("mu", "mi", "pe"). Lo largo o lo incorrecto ("MUUU", "miau", "CUAC") solo lo dicen los animales. El ✔ va solo sobre "m + u = mu", nunca sobre "MUUUU".
+5. Con la M se enseña a juntar sonidos con el truco del "mmm" (la M se puede alargar sin cambiar su sonido). Con la P no se hace, porque su sonido no se puede alargar.
+6. El remate vuelve a la M (pág. 21 completa), así que el vídeo empieza y termina en la misma letra.
+
+**Locución (TTS):** el texto de las voces va con las sílabas en minúscula y entre exclamaciones ("¡mu!", "¡mi!", "¡pe!"), nunca en mayúscula, para que no se lean como siglas ("eme u", "pe e"). Antes de montar hay que escuchar cada toma: "mu", "mi" y "pe" tienen que sonar cortas, sin vocal de más y sin el nombre de la letra delante. Si una toma sale mal, se repite solo esa sílaba.
 
 ## Escaleta
 
@@ -21,11 +24,11 @@
 |---|---|---|---|---|---|
 | 0,0 | 1,8 | [VOZ PINTI] "¿Cómo suena la M con la U?" | **¿Cómo suena la M con la U?** (arriba, entra palabra a palabra con la voz) | Frame 0: Pinti ya está en plano, de cerca, sosteniendo la tarjeta "m" en una mano y la "u" en la otra. Las choca y se funden en la tarjeta rosa "mu" con un pequeño rebote. Cámara con leve zoom-in. | pop suave al fundirse las tarjetas (frame del choque) |
 | 1,8 | 3,4 | [VOZ VACA] "¡MUUUU!" | **MUUUU** (letras grandes que vibran con la voz) | La vaca entra desde la derecha a saltitos. Le rebota la campana y mueve las orejas. Al mugir, se le estira la boca (squash & stretch) y Pinti sale despeinado hacia atrás por el "viento". | campanita en cada salto + boing al aterrizar |
-| 3,4 | 4,6 | [VOZ PINTI] "¡Eso! ¡Mu!" | **m + u = mu** ✔ (check dibujado, verde) | La tarjeta "mu" brilla y Pinti choca la pezuña de la vaca. Pequeño estallido de estrellas amarillas como las de "¡Lo logré!". | ding de acierto (corto y brillante) |
+| 3,4 | 4,6 | [VOZ PINTI] "¡Mmm… u… ¡mu!" | **m + u = mu** ✔ (check verde dibujado solo sobre la fórmula; "MUUUU" ya desapareció) | La tarjeta "mu" se separa en "m" y "u". Mientras suena "mmm", la tarjeta "m" vibra; con la "u" se juntan de nuevo y vuelven a ser "mu". La tarjeta brilla, Pinti choca la pezuña de la vaca y salen unas estrellas amarillas como las de "¡Lo logré!". | zumbido suave en la vibración de la "m" + ding de acierto al unirse |
 | 4,6 | 5,8 | [VOZ PINTI] "¿Y la M con la I?" | **m + i = ?** | Whip-pan lateral rápido: la vaca sale y aparece la tarjeta verde "mi". Pinti la levanta mirando a la izquierda. | whoosh del barrido |
-| 5,8 | 6,9 | [VOZ GATO] "¡Miau!" | **MIAU** | El gato asoma desde abajo del encuadre, sube de golpe y se sienta. Mueve la cola y parpadea. | pop de aparición |
-| 6,9 | 8,6 | [VOZ PINTI] "Casi… ¡es mi!" | **MI~~AU~~** → queda **MI** | Gag visual: la "A" y la "U" de "MIAU" se despegan y caen rebotando al suelo. Queda "MI" encima de la tarjeta "mi". El gato mira las letras caídas, sorprendido. | plin-plin de las dos letras al caer (una por letra, en el frame de impacto) |
-| 8,6 | 11,0 | [VOZ PINTI] "Ahora la P. ¡Pepe! ¿La P con la E?" | Cabecera: **Sílabas con M** → **Sílabas con P** · debajo: **p + e = ?** | Al decir "la P", la cabecera gira como una tarjeta y cambia de letra. Las tarjetas de la M se apartan y entra sola la tarjeta azul "pe" (pág. 24). Pepe entra deslizándose sobre su charquito de agua con las ondas animadas. | flip de la tarjeta + chapoteo suave cuando entra Pepe |
+| 5,8 | 6,9 | [VOZ GATO] "¡Miau!" | **miau** (minúscula) | El gato asoma desde abajo del encuadre, sube de golpe y se sienta. Mueve la cola y parpadea. | pop de aparición |
+| 6,9 | 8,6 | [VOZ PINTI] "Casi… ¡es mi!" | **mi~~au~~** → queda **mi** | Gag visual: la "a" y la "u" de "miau" se despegan y caen rebotando al suelo. Queda "mi", que encaja letra por letra sobre la tarjeta verde "mi". El gato mira las letras caídas, sorprendido. | plin-plin de las dos letras al caer (una por letra, en el frame de impacto) |
+| 8,6 | 11,0 | [VOZ PINTI] "¡Ahora, la letra de Pepe! ¿Cómo dice esta?" | Cabecera: **Sílabas con M** → **Sílabas con P** · debajo: **p + e = ?** | Al decir "la letra de Pepe", la cabecera gira como una tarjeta y cambia de letra (la P solo se ve, no se nombra). Las tarjetas de la M se apartan y entra sola la tarjeta azul "pe" (pág. 24). Con "¿Cómo dice esta?" Pinti la señala. Pepe entra deslizándose sobre su charquito de agua con las ondas animadas. | flip de la tarjeta + chapoteo suave cuando entra Pepe |
 | 11,0 | 12,0 | [VOZ PEPE] "¡CUAC!" | **CUAC** (letras amarillas que saltan) | Pepe lo dice con todo el pecho y el agua salpica. Pinti se queda congelado medio segundo con los ojos muy abiertos (beat cómico). | splash pequeño, sincronizado con el "CUAC" |
 | 12,0 | 14,6 | [VOZ PINTI] "¡Nooo, Pepe! P con E… ¡PE! ¡Como tu nombre!" | **p + e = pe** → luego **PE·PE** con las dos "pe" resaltadas en azul | Pinti se lleva las manos a la cabeza y luego señala la tarjeta. Al decir "tu nombre", aparece "PE·PE" encima de Pepe y cada "pe" se ilumina al pronunciarla. | ding al "¡PE!" + dos tics al iluminarse cada "pe" |
 | 14,6 | 15,8 | [VOZ PEPE] "Pe… ¡PEPE!" | **PEPE** ✔ | Pepe entiende, da una vuelta feliz en el agua y aletea. | sparkle + aleteo suave |
