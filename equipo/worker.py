@@ -108,6 +108,8 @@ class Tanda:
         self.paso("pedagoga", "Revisando lo que se enseña", f"Revisa {d}/guion.md; escribe en {d}/revision.md. "
                   "Termina con `VEREDICTO: APROBADO` o `VEREDICTO: CORREGIR` y cambios concretos.", ep, a="guionista")
         subir(f"Guion {ep}")
+        db.hallazgo("guionista", "guion", f"Guion de {ep}", detalle="Revisado por crítico y pedagoga",
+                    enlace=f"{WEB}/{d}/guion.md", episodio=ep)
         self.paso("arte", "Brief visual", f"Escribe {d}/arte.md (escenas de pinti-organico/marca/escenas/, paleta, primer "
                   "fotograma, qué se ve distinto). Si la biblioteca no tiene algo necesario, amplíala y pruébalo.", ep, a="guionista")
         self.paso("sonido", "Plan de audio", (
@@ -115,6 +117,7 @@ class Tanda:
             f"sfx con 'linea'+'palabra'+'desfase' o 't', música si el guion la pide). Solo texto que se dice en voz. "
             "No generes nada: el sistema lo hace tras el OK de Wal. Termina con `VEREDICTO: OK`."), ep, a="arte")
         subir(f"Brief y plan de audio {ep}")
+        db.hallazgo("arte", "idea", f"Brief visual de {ep}", enlace=f"{WEB}/{d}/arte.md", episodio=ep)
 
     def aprobar_creditos(self, eps):
         total, det = 0, {}
