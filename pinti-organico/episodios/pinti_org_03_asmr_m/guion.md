@@ -14,11 +14,13 @@ Pinti hace de crayón: va inclinado y la punta deja **una sola línea naranja co
 
 - **M mayúscula (2 trazos):**
   1. Desde el punto de arriba a la izquierda, el palito baja de arriba abajo.
-  2. La punta se levanta y vuelve al mismo punto de arriba a la izquierda. Desde ahí baja en diagonal hasta el centro, sube en diagonal hasta arriba a la derecha y baja recto hasta abajo. Todo es un solo trazo continuo.
+  2. La punta se levanta y vuelve al mismo punto de arriba a la izquierda. Desde ahí baja en diagonal siguiendo los puntos hasta el pico de abajo de la V, sube en diagonal hasta arriba a la derecha y baja recto hasta abajo. Todo es un solo trazo continuo.
 - **m minúscula (3 trazos):**
   1. El palito baja de arriba abajo.
   2. Desde el punto verde del palito, sube por él, hace el primer puente (la curva hacia la derecha) y baja.
   3. Desde el punto verde del palito del medio, sube, hace el segundo puente y baja.
+- **Letra de imprenta, nunca ligada:** entre una letra y la siguiente la punta siempre se levanta (también en la palabra "Mamá").
+- **Reglas del guionista (reglas.md):** las letras nunca giran ni se voltean en pantalla. Solo se mueve la cámara (paneo o panorámica vertical) y la letra queda siempre derecha. Cada trazo indica su punto de inicio y su dirección. En voz no se nombra ninguna letra suelta: solo se dice su sonido, "mmm".
 - Cada vez que la punta toca el papel empieza el *scratch* y cada vez que se levanta se corta (con un "tic" mínimo). El sonido nunca suena con la punta en el aire.
 
 ## Escaleta
