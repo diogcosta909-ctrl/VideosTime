@@ -29,16 +29,13 @@ Lee primero `pinti-organico/BRIEF.md` y tu sección **Productor** en `pinti-orga
 Cada vez que Wal corrija algo ("el gancho es flojo", "la voz va lenta"), conviértelo en una regla concreta y añádela en el momento a la sección del agente responsable en `pinti-organico/memoria/reglas.md` (`fuente: Wal`). Así no tiene que repetirlo nunca.
 
 ## Oficina en vivo (obligatorio en cada paso)
-Wal sigue el trabajo en la Oficina Pinti: https://claude.ai/artifact/UJfjGWYAhuoNPvcGg49ovE
-Con la herramienta `ArtifactData` (url de arriba), en un solo `batch` por cambio:
-- Al EMPEZAR un paso: `update` en `agentes/<id>` → `estado: "trabajando"` (o `"revisando"` para crítico, pedagoga y arte cuando revisan), `tarea` (qué hace, ≤ 60 caracteres), `episodio` (slug), `actualizado` (ISO UTC actual).
-- Al TERMINAR: `estado: "listo"` (o `"devuelto"`/`"error"`), `nota` (solo el crítico, 0–10), `archivo` (enlace https al archivo en GitHub o al audio, si existe).
-- Esperando a Wal (créditos, aprobación): `estado: "esperando"`.
-- Tú (productor) estás `trabajando` mientras coordinas, con la tarea "Coordinando tanda: N vídeos".
-- Cada cambio añade un documento en `eventos` (id `e-<AAAAMMDD>-<HHMMSS>-<id>`) con `agente`, `texto`, `ts`, `episodio` y, si pasa el trabajo a otro agente, `a: "<id destino>"` (en la oficina se ve a la persona llevar el papel a la otra mesa).
-- Al acabar la tanda, todos vuelven a `estado: "libre"`, `tarea: ""`.
-ids: productor, creativo, estratega, guionista, pedagoga, critico, arte, sonido, animador, montaje, publicador, community, analista. Lee la versión del documento antes de escribir (`if_version`). Solo estados reales: nunca simular actividad.
-- **Hallazgos y entregas en vivo**: cada agente publica lo que produce en cuanto existe, en la colección `hallazgos` (doc_id `<tipo1letra>-<AAAAMMDD>-<n>`), con `agente`, `tipo` (`referencia` = vídeo viral encontrado, `idea`, `guion`, `audio`, `video`), `titulo`, `detalle` (≤ 160 caracteres), `enlace` (solo URLs reales: vídeo de referencia, archivo en GitHub, enlace del audio), `metricas` (solo si se ven; si no "sin dato"), `ts`, `episodio`. Pide a cada subagente que lo haga con `ArtifactData` (cargarla con ToolSearch "select:ArtifactData").
-- Además, tras cada paso terminado: commit + push de `pinti-organico/` para que los archivos se vean en GitHub en el momento.
+Wal sigue el trabajo en la Oficina Pinti (Railway). Todo se reporta con `python3 pinti-organico/oficina/reportar.py` (escribe en el repo, hace commit y push; Railway lo sincroniza solo):
+- Al EMPEZAR un paso: `reportar.py agente <id> --estado trabajando|revisando --tarea "<≤60 car.>" --episodio <slug>` (`revisando` para crítico, pedagoga y arte cuando revisan).
+- Al TERMINAR: `reportar.py agente <id> --estado listo|devuelto|error [--nota 0-10 (solo crítico)] [--archivo URL https]`. Esperando a Wal (créditos, aprobación): `--estado esperando`.
+- Cada traspaso: `reportar.py evento <id> "<texto>" --a <id destino> --episodio <slug>` (en la oficina se ve a la persona llevar el papel a la otra mesa).
+- Tú (productor) estás `trabajando` mientras coordinas: tarea "Coordinando tanda: N vídeos".
+- Al acabar la tanda, todos vuelven a `--estado libre --tarea ""`.
+- **Hallazgos y entregas en vivo**: cada agente publica lo que produce en cuanto existe: `reportar.py hallazgo <id> referencia|idea|guion|audio|video "<título>" --detalle "<≤160 car.>" --enlace <URL https real> --metricas "<solo si se ven; si no: sin dato>" --episodio <slug>`. Pide a cada subagente que lo haga así.
+ids: productor, creativo, estratega, guionista, pedagoga, critico, arte, sonido, animador, montaje, publicador, community, analista. Solo estados reales: nunca simular actividad. Si el push falla, sigue trabajando y reintenta luego.
 
 Recordatorio: nunca generar imágenes ni vídeo con ElevenLabs; nunca inventar métricas.
