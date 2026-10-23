@@ -19,3 +19,4 @@
 {"a": "arte", "agente": "critico", "episodio": "pinti_org_02_silabas_animales", "texto": "Aprueba guion MUUU (8,7/10)", "ts": "2026-10-23T21:15:00Z", "id": "e-20261023-231500-critico"}
 {"a": "guionista", "agente": "critico", "episodio": "pinti_org_03_asmr_m", "texto": "Devuelve guion ASMR (6,7/10): cierre que diga qué es el libro, gancho sin sonido", "ts": "2026-10-23T21:17:00Z", "id": "e-20261023-231700-critico"}
 {"id": "e-20261023-231900-critico", "agente": "critico", "texto": "Aprueba guion ASMR (8,2/10): los 3 guiones aprobados", "a": "productor", "ts": "2026-10-23T21:19:00Z", "episodio": "pinti_org_03_asmr_m"}
+{"id": "e-20261023-223059-productor", "agente": "productor", "texto": "Oficina en Railway activa; arte retoma la biblioteca de escenas", "ts": "2026-10-23T22:30:59Z", "a": "arte", "episodio": "pinti_org_01_b_d"}
