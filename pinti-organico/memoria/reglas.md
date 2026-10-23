@@ -6,6 +6,8 @@ Solo el productor (correcciones de Wal) y el analista (datos) escriben aquí. Re
 
 ## Productor
 
+## Creativo
+
 ## Estratega
 
 ## Guionista
