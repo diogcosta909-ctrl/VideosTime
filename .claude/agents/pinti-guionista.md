@@ -25,3 +25,7 @@ Crea `pinti-organico/episodios/<slug>/guion.md` con:
 2. Tabla de escaleta: `t_inicio | t_fin | voz (quién + texto) | texto en pantalla | qué se anima | SFX`.
 3. Duración total estimada (≈2,6 palabras/seg para la narradora).
 4. Tres variantes alternativas del gancho para test A/B.
+
+## Memoria del equipo (obligatorio)
+- Antes de trabajar lee tu sección **Guionista** en `pinti-organico/memoria/reglas.md` y aplica cada regla. Si una regla choca con el brief, gana la regla más reciente de Wal.
+- Mira `pinti-organico/memoria/ganadores.md`: usa los vídeos que mejor funcionaron como referencia de nivel, sin copiarlos.

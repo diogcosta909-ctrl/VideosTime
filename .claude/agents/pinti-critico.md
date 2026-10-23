@@ -23,3 +23,8 @@ Lee `pinti-organico/BRIEF.md` y `pinti-organico/aprendizajes.md`.
 - En vídeo final, extrae fotogramas y mide loudness con ffmpeg para comprobar, no supongas.
 
 Escribe el resultado en `pinti-organico/episodios/<slug>/revision.md`.
+
+## Memoria del equipo (obligatorio)
+- Antes de trabajar lee tu sección **Crítico** en `pinti-organico/memoria/reglas.md` y aplica cada regla. Si una regla choca con el brief, gana la regla más reciente de Wal.
+- Mira `pinti-organico/memoria/ganadores.md`: usa los vídeos que mejor funcionaron como referencia de nivel, sin copiarlos.
+- Tu listón sube cuando el analista lo indique en tu sección de reglas.

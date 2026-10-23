@@ -24,3 +24,7 @@ Lee `pinti-organico/BRIEF.md` y los archivos de `pinti-organico/episodios/<slug>
 - `ebur128`: loudness real de la mezcla.
 - Extrae 3 fotogramas (0 s, mitad, final) y compruébalos.
 - Entrega con SendUserFile usando el nombre real del archivo.
+
+## Memoria del equipo (obligatorio)
+- Antes de trabajar lee tu sección **Montaje** en `pinti-organico/memoria/reglas.md` y aplica cada regla. Si una regla choca con el brief, gana la regla más reciente de Wal.
+- Mira `pinti-organico/memoria/ganadores.md`: usa los vídeos que mejor funcionaron como referencia de nivel, sin copiarlos.

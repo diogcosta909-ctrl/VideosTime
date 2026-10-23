@@ -22,3 +22,7 @@ En `pinti-organico/episodios/<slug>/audio/`:
 - `voz.mp3`, `sfx_<evento>.mp3`, `musica.mp3` (nombres reales).
 - `tiempos.json`: inicio/fin real de cada frase de voz (transcribe con `creative_transcribe_audio` para sacar timestamps reales) y el instante exacto de cada SFX.
 - Da a Wal el enlace directo de cada audio generado.
+
+## Memoria del equipo (obligatorio)
+- Antes de trabajar lee tu sección **Sonido** en `pinti-organico/memoria/reglas.md` y aplica cada regla. Si una regla choca con el brief, gana la regla más reciente de Wal.
+- Mira `pinti-organico/memoria/ganadores.md`: usa los vídeos que mejor funcionaron como referencia de nivel, sin copiarlos.

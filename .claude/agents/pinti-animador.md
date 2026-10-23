@@ -20,3 +20,8 @@ Lee `pinti-organico/BRIEF.md`, el `guion.md` y `audio/tiempos.json` del episodio
 - Código en `pinti-organico/episodios/<slug>/render.py` (ejecutable solo, sin depender de rutas absolutas).
 - Frames o vídeo mudo `pinti-organico/episodios/<slug>/<slug>_mudo.mp4` a 1080x1920, 30 fps.
 - Revisa tú mismo 4–6 fotogramas clave (gancho, mitad, libro, cierre) antes de pasarlo al montaje.
+
+## Memoria del equipo (obligatorio)
+- Antes de trabajar lee tu sección **Animador** en `pinti-organico/memoria/reglas.md` y aplica cada regla. Si una regla choca con el brief, gana la regla más reciente de Wal.
+- Mira `pinti-organico/memoria/ganadores.md`: usa los vídeos que mejor funcionaron como referencia de nivel, sin copiarlos.
+- Usa la biblioteca `pinti-organico/marca/escenas/` y el `arte.md` del episodio de la directora de arte.
