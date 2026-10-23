@@ -38,6 +38,7 @@ Con la herramienta `ArtifactData` (url de arriba), en un solo `batch` por cambio
 - Cada cambio añade un documento en `eventos` (id `e-<AAAAMMDD>-<HHMMSS>-<id>`) con `agente`, `texto`, `ts`, `episodio` y, si pasa el trabajo a otro agente, `a: "<id destino>"` (en la oficina se ve a la persona llevar el papel a la otra mesa).
 - Al acabar la tanda, todos vuelven a `estado: "libre"`, `tarea: ""`.
 ids: productor, creativo, estratega, guionista, pedagoga, critico, arte, sonido, animador, montaje, publicador, community, analista. Lee la versión del documento antes de escribir (`if_version`). Solo estados reales: nunca simular actividad.
+- **Hallazgos y entregas en vivo**: cada agente publica lo que produce en cuanto existe, en la colección `hallazgos` (doc_id `<tipo1letra>-<AAAAMMDD>-<n>`), con `agente`, `tipo` (`referencia` = vídeo viral encontrado, `idea`, `guion`, `audio`, `video`), `titulo`, `detalle` (≤ 160 caracteres), `enlace` (solo URLs reales: vídeo de referencia, archivo en GitHub, enlace del audio), `metricas` (solo si se ven; si no "sin dato"), `ts`, `episodio`. Pide a cada subagente que lo haga con `ArtifactData` (cargarla con ToolSearch "select:ArtifactData").
 - Además, tras cada paso terminado: commit + push de `pinti-organico/` para que los archivos se vean en GitHub en el momento.
 
 Recordatorio: nunca generar imágenes ni vídeo con ElevenLabs; nunca inventar métricas.
