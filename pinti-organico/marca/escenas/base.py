@@ -151,16 +151,27 @@ def rect_redondeado(tam, radio, relleno, borde=None, grosor=0, escala=2):
 
 
 def camara_viva(frame, t, zoom=1.0, deriva=6.0, respira=0.008, foco=(0.5, 0.5)):
-    """Cámara viva: aplica zoom + respiración + deriva lenta al fotograma (nunca plano quieto)."""
-    z = zoom * (1 + respira * math.sin(t * 2 * math.pi / 3.7))
+    """Cámara viva: aplica zoom + respiración + deriva lenta al fotograma (nunca plano quieto ni bordes vacíos)."""
+    fx, fy = foco[0] * W, foco[1] * H
+    # zoom mínimo para que la deriva y la respiración nunca dejen ver el borde (saldría negro)
+    mx = max(40.0, min(fx, W - fx))
+    my = max(40.0, min(fy, H - fy))
+    z_min = max(1 + (deriva + 2) / mx, 1 + (deriva * 0.6 + 2) / my) / (1 - respira)
+    z = max(zoom, z_min) * (1 + respira * math.sin(t * 2 * math.pi / 3.7))
     dx = deriva * math.sin(t * 2 * math.pi / 5.3)
     dy = deriva * 0.6 * math.cos(t * 2 * math.pi / 6.1)
-    fx, fy = foco[0] * W, foco[1] * H
     # punto de salida (x,y) <- origen ((x - fx)/z + fx - dx, ...)
     a, e = 1 / z, 1 / z
     c = fx - fx / z - dx / z
     f = fy - fy / z - dy / z
     return frame.transform(frame.size, Image.AFFINE, (a, 0, c, 0, e, f), resample=Image.BILINEAR)
+
+
+def aplanar(frame, color=None):
+    """Pasa el fotograma a RGB sobre crema (nunca sobre negro): úsalo siempre antes de escribir el frame al vídeo."""
+    fondo = Image.new("RGBA", frame.size, rgb(color or P["crema_claro"]))
+    fondo.alpha_composite(frame.convert("RGBA"))
+    return fondo.convert("RGB")
 
 
 def nuevo_lienzo(color=None):

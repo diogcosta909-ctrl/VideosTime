@@ -106,3 +106,75 @@ def corazones(lienzo, t, cx, cy, t0, n=3):
         d.ellipse((x, y - s * 0.6, x + s, y + s * 0.3), fill=col)
         d.polygon([(x - s * 0.97, y), (x + s * 0.97, y), (x, y + s * 1.05)], fill=col)
     return lienzo
+
+
+def check(lienzo, t, x, y, t0, tam=90, color=None):
+    """Check verde (color del punto de inicio del libro) que se dibuja en 0,25 s con pop desde t0, sobre círculo blanco."""
+    u = clamp((t - t0) / 0.25)
+    if u <= 0:
+        return lienzo
+    esc = rebote_atras(clamp((t - t0) / 0.35))
+    r = tam / 2 * esc
+    d = ImageDraw.Draw(lienzo)
+    d.ellipse((x - r, y - r, x + r, y + r), fill=rgb("#FFFFFF"))
+    col = rgb(color or P["punto_verde"])
+    p = [(x - r * 0.45, y + r * 0.02), (x - r * 0.1, y + r * 0.35), (x + r * 0.5, y - r * 0.35)]
+    l1 = min(1.0, u * 2)
+    a = (p[0][0] + (p[1][0] - p[0][0]) * l1, p[0][1] + (p[1][1] - p[0][1]) * l1)
+    d.line([p[0], a], fill=col, width=max(4, int(r * 0.22)), joint="curve")
+    if u > 0.5:
+        l2 = (u - 0.5) * 2
+        b = (p[1][0] + (p[2][0] - p[1][0]) * l2, p[1][1] + (p[2][1] - p[1][1]) * l2)
+        d.line([p[1], b], fill=col, width=max(4, int(r * 0.22)), joint="curve")
+    return lienzo
+
+
+def destello(lienzo, t, pts, t0, dur=0.45, ancho=26):
+    """Brillo suave que recorre una trayectoria ya trazada (la M terminada brilla una vez)."""
+    u = (t - t0) / dur
+    if not 0 <= u <= 1 or len(pts) < 2:
+        return lienzo
+    capa = Image.new("RGBA", lienzo.size, (0, 0, 0, 0))
+    d = ImageDraw.Draw(capa)
+    n = len(pts)
+    i0, i1 = int(max(0, (u - 0.25) * n)), int(min(n, u * n + 1))
+    if i1 - i0 >= 2:
+        d.line(pts[i0:i1], fill=(255, 255, 255, 170), width=ancho, joint="curve")
+    from PIL import ImageFilter
+    lienzo.alpha_composite(capa.filter(ImageFilter.GaussianBlur(6)))
+    return lienzo
+
+
+def letra_cae(lienzo, t, letra, x, y, suelo, t0, tam=150, color=None, retraso=0.0):
+    """Una letra se despega y cae en vertical con gravedad y rebota en `suelo` sin rotar nunca (gag de "miau")."""
+    from .base import fuente as _f
+    tt = t - t0 - retraso
+    if tt < 0:
+        yy = y
+    else:
+        g = 3200.0
+        caida = suelo - y
+        tc = math.sqrt(2 * max(1, caida) / g)
+        if tt < tc:
+            yy = y + 0.5 * g * tt * tt
+        else:
+            v = g * tc * 0.35
+            tb = tt - tc
+            alto_rebote = max(0.0, v * tb - 0.5 * g * tb * tb)
+            yy = suelo - alto_rebote
+    d = ImageDraw.Draw(lienzo)
+    d.text((x, yy), letra, font=_f(tam, 700), fill=rgb(color or P["tinta"]), anchor="ms",
+           stroke_width=8, stroke_fill=rgb("#FFFFFF"))
+    return lienzo
+
+
+def velo(lienzo, y0, y1, opacidad=0.72, color="#FFF7EC"):
+    """Banda crema difusa detrás del texto cuando el fondo es una página llena (macro): da lectura sin tarjeta ni borde."""
+    from PIL import ImageFilter
+    m = Image.new("L", lienzo.size, 0)
+    ImageDraw.Draw(m).rounded_rectangle((-40, y0, lienzo.width + 40, y1), 60, fill=int(255 * opacidad))
+    m = m.filter(ImageFilter.GaussianBlur(28))
+    capa = Image.new("RGBA", lienzo.size, rgb(color))
+    capa.putalpha(m)
+    lienzo.alpha_composite(capa)
+    return lienzo

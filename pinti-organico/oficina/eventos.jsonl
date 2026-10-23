@@ -21,3 +21,6 @@
 {"id": "e-20261023-231900-critico", "agente": "critico", "texto": "Aprueba guion ASMR (8,2/10): los 3 guiones aprobados", "a": "productor", "ts": "2026-10-23T21:19:00Z", "episodio": "pinti_org_03_asmr_m"}
 {"id": "e-20261023-223059-productor", "agente": "productor", "texto": "Oficina en Railway activa; arte retoma la biblioteca de escenas", "ts": "2026-10-23T22:30:59Z", "a": "arte", "episodio": "pinti_org_01_b_d"}
 {"id": "e-20261023-223318-productor", "agente": "productor", "texto": "Sesión nueva: arte retoma escenas y arte.md", "ts": "2026-10-23T22:33:18Z", "a": "arte", "episodio": "pinti_org_01_b_d"}
+{"id": "e-20261023-224232-arte-1", "agente": "arte", "texto": "Brief visual listo (arte.md + arte_frame0.jpg)", "ts": "2026-10-23T22:42:32Z", "a": "animador", "episodio": "pinti_org_01_b_d"}
+{"id": "e-20261023-224232-arte-2", "agente": "arte", "texto": "Brief visual listo (arte.md + arte_frame0.jpg)", "ts": "2026-10-23T22:42:32Z", "a": "animador", "episodio": "pinti_org_02_silabas_animales"}
+{"id": "e-20261023-224232-arte-3", "agente": "arte", "texto": "Brief visual listo (arte.md + arte_frame0.jpg)", "ts": "2026-10-23T22:42:32Z", "a": "animador", "episodio": "pinti_org_03_asmr_m"}

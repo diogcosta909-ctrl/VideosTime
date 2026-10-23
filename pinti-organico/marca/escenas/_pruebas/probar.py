@@ -5,14 +5,14 @@ import sys
 AQUI = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(os.path.dirname(AQUI)))
 
-from escenas import base, pinti, fondos, pagina, trazo, texto, transiciones, efectos  # noqa: E402
+from escenas import base, pinti, fondos, pagina, trazo, texto, transiciones, efectos, personaje  # noqa: E402
 from escenas.base import P  # noqa: E402
 
 
 def guardar(img, nombre, zona=False):
     if zona:
         img = base.guia_zona_segura(img.copy())
-    img.convert("RGB").save(os.path.join(AQUI, nombre), quality=92)
+    base.aplanar(img).save(os.path.join(AQUI, nombre), quality=92)
 
 
 # 1. Fondos
@@ -100,4 +100,54 @@ guardar(transiciones.render(a, b, 0.2, "deslizar"), "trans_deslizar.jpg")
 
 # 12. Cámara viva
 guardar(base.camara_viva(a, 1.3, zoom=1.04), "camara_viva.jpg")
+
+# 13. Personajes del libro (PNG reales): vaca gritando, gato con parpadeo cerrado, Pepe con ondas, mamá
+L = fondos.cuarto(1.0)
+personaje.dibujar(L, 1.0, "vaca", 290, 900, alto=430, squash=personaje.grito(1.05, 1.0, 1.8))
+personaje.dibujar(L, 1.0, "gato", 790, 900, alto=430, parpadeo=1.0)
+personaje.ondas(L, 1.0, 290, 1500, ancho=460)
+personaje.dibujar(L, 1.0, "pepe", 290, 1520, alto=330)
+personaje.salpicadura(L, 1.2, 290, 1450, t0=1.0)
+personaje.dibujar(L, 1.0, "mama", 790, 1560, alto=520, salto=personaje.saltitos(1.1, 1.0, 2.0)[0])
+guardar(L, "personajes_libro.jpg", zona=True)
+
+# 14. ASMR pág. 20: macro de la 1.ª M (≈4x) con el trazo 2 a mitad y Pinti trazando
+L = fondos.mesa(0.0)
+caja = trazo.pag20_M_fila1(0)
+foco = ((caja[0] + caja[2]) / 2, (caja[1] + caja[3]) / 2)
+a_p = pagina.camara(L, 0.0, 20, foco, 4.2, centro=(540, 860))
+cp = [a_p(caja[0], caja[1]), a_p(caja[2], caja[3])]
+tr = trazo.letra_M((cp[0][0], cp[0][1], cp[1][0], cp[1][1]))
+punta, apoyada, ang = trazo.render_tiempos(L, 1.9, tr, [(0.0, 1.0), (1.2, 3.1)], grosor=30, badges=False)
+inc = pinti.inclinacion_trazo(ang)   # el cuerpo va detrás del avance: no tapa lo que se dibuja
+fx, fy = pinti.pies_para_punta(punta[0], punta[1], alto=420, inclina=inc)
+pinti.dibujar(L, 1.9, fx, fy, alto=420, pose="quieto", inclina=inc, sombra=False, respira=False)
+texto.karaoke(L, 0.3, [("La", 0, 1.2), ("M,", 0, 1.2), ("trazo", 1.2, 2.6), ("a", 1.2, 2.6), ("trazo", 1.2, 2.6)],
+              500, 330, tam=84, ancho_max=860)
+texto.titulo(L, 0.3, "Sube el volumen", 500, 440, t0=-1, tam=56)
+guardar(L, "asmr_macro_M.jpg", zona=True)
+
+# 15. ASMR: "Mamá" escrita + mamá coloreada al 60 % (página real modificada solo con el trazo/color)
+img = pagina.cargar(20)
+mr = pagina.mascara_zona(20, pagina.PAG20_MAMA_DIBUJO, tuple(pagina.PAG20_SEMILLAS_ROSA))
+img = pagina.colorear(img, mr, base.P["mama_rosa"], 0.6, pagina.PAG20_MAMA_DIBUJO)
+L = fondos.mesa(0.0)
+a_p = pagina.camara(L, 0.0, img, (450, 1200), 1.9, centro=(540, 900))
+for k in ("M", "a1", "m", "a2"):
+    c = trazo.PAG20_MAMA[k]
+    (ax, ay), (bx, by) = a_p(c[0], c[1]), a_p(c[2], c[3])
+    f = {"M": trazo.letra_M, "a1": trazo.letra_a, "m": trazo.letra_m, "a2": trazo.letra_a}[k]
+    tr = f((ax, ay, bx, by))
+    trazo.render_tiempos(L, 9, tr, [(0, 1)] * len(tr), grosor=9, badges=False)
+(p0, p1) = trazo.PAG20_MAMA["tilde"]
+trazo.render_tiempos(L, 9, trazo.tilde(a_p(*p0), a_p(*p1)), [(0, 1)], grosor=9, badges=False)
+efectos.check(L, 1.0, 860, 760, t0=0.5)
+guardar(L, "asmr_mama_colorear.jpg", zona=True)
+
+# 16. Portada en plano (sin tilt) para el ASMR + letras que caen sin rotar
+L = fondos.crema(0.0)
+pagina.portada_entra(L, 0.3, 0.0, dur=0.55, centro=(540, 760), ancho=620, tilt=False)
+efectos.letra_cae(L, 0.25, "a", 600, 1100, 1400, t0=0.0)
+efectos.letra_cae(L, 0.25, "u", 700, 1100, 1400, t0=0.0, retraso=0.08)
+guardar(L, "portada_plana_letras_caen.jpg", zona=True)
 print("ok")

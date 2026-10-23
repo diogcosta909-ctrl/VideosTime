@@ -61,7 +61,7 @@ def deslizar(a, b, u, direccion="izq"):
     """b empuja a a fuera con un deslizamiento con rebote suave (izq | der | arriba)."""
     u = clamp(u)
     e = sale(u, 3)
-    out = Image.new("RGBA", (W, H))
+    out = b.convert("RGBA").copy()  # base b: sin rendijas vacías por redondeo
     if direccion in ("izq", "der"):
         s = -1 if direccion == "izq" else 1
         out.paste(a.convert("RGBA"), (int(s * e * W), 0))

@@ -70,7 +70,7 @@ def titulo(lienzo, t, texto, cx, cy, t0=0.0, tam=86, color=None, borde_col="#FFF
 
 def karaoke(lienzo, t, palabras, cx, cy, tam=84, ancho_max=880, color=None, color_activo=None,
             color_resalte=None, borde=10, pop_activa=0.10):
-    """Frase completa visible desde el frame 0 con resaltado karaoke: palabras=[(texto, t_ini, t_fin), ...]; la palabra activa crece y lleva fondo."""
+    """Frase completa visible desde el frame 0 con resaltado karaoke: palabras=[(texto, t_ini, t_fin), ...]; las palabras activas (una o varias) crecen y llevan pastilla naranja."""
     f = fuente(tam, 700)
     color = rgb(color or TINTA)
     color_activo = rgb(color_activo or "#FFFFFF")
@@ -90,7 +90,7 @@ def karaoke(lienzo, t, palabras, cx, cy, tam=84, ancho_max=880, color=None, colo
     alto_l = int(tam * 1.25)
     y0 = cy - alto_l * len(lineas) / 2 + alto_l / 2
     d = ImageDraw.Draw(lienzo)
-    activa_pos = None
+    activas = []
     for li, (idxs, ancho) in enumerate(lineas):
         x = cx - ancho / 2
         y = y0 + li * alto_l
@@ -98,13 +98,12 @@ def karaoke(lienzo, t, palabras, cx, cy, tam=84, ancho_max=880, color=None, colo
             p, a, b = palabras[i]
             w = _medir(p, f)[0]
             if a <= t < b:
-                activa_pos = (p, a, x, y, w)
+                activas.append((p, a, x, y, w))
             else:
                 d.text((x + w / 2, y), p, font=f, fill=color, anchor="mm", stroke_width=borde,
                        stroke_fill=rgb("#FFFFFF"))
             x += w + esp
-    if activa_pos:  # la activa se dibuja al final, encima de todo
-        p, a, x, y, w = activa_pos
+    for p, a, x, y, w in activas:  # las activas (una o un grupo, p. ej. "La M,") se dibujan al final, encima
         u = clamp((t - a) / max(0.05, pop_activa))
         esc = 1 + 0.08 * rebote_atras(u, 2.5)
         pad = int(tam * 0.12)

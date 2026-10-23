@@ -139,13 +139,13 @@ def _cielo_estatico():
     return _con_grano(img, 0.6)
 
 
-def cielo(t):
-    """Paisaje del cuento (pág. 22): cielo celeste, colina verde, sol que late y nubes que pasan."""
+def cielo(t, sol=(930, 190)):
+    """Paisaje del cuento (pág. 22): cielo celeste, colina verde, sol que late (arriba a la derecha, fuera de la franja de texto) y nubes que pasan por detrás."""
     img = _cielo_estatico().copy()
     d = ImageDraw.Draw(img)
     r = 70 + 4 * math.sin(t * 2)
-    d.ellipse((860 - r, 300 - r, 860 + r, 300 + r), fill=rgb(P["sol"]))
-    for i, (y, v) in enumerate(((330, 22), (560, 15))):
+    d.ellipse((sol[0] - r, sol[1] - r, sol[0] + r, sol[1] + r), fill=rgb(P["sol"]))
+    for i, (y, v) in enumerate(((620, 22), (900, 15))):
         cx = (t * v + i * 500) % (W + 400) - 200
         for ox, oy, rr in ((0, 0, 50), (55, -18, 62), (115, 0, 48)):
             d.ellipse((cx + ox - rr, y + oy - rr, cx + ox + rr, y + oy + rr), fill=(255, 255, 255, 255))

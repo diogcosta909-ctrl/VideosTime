@@ -8,7 +8,7 @@ Código de referencia: `pinti-organico/marca/escenas/` (cada valor de esta guía
 - Pinti es un **crayón naranja** con punta, la franja blanca en zigzag con estrella amarilla, brazos de línea con guantes blancos, zapatos morados, ojos grandes con dos brillos, mejillas rosas y sonrisa abierta.
 - **Nunca se redibuja ni se rediseña.** Todo movimiento sale de transformar el PNG: escala, rotación, deformación (squash/stretch), y rotar los brazos recortados del propio PNG (`escenas/pinti.py`).
 - Lo único que se añade encima es el **parpadeo**: el ojo del PNG se aplasta en vertical y, en el frame cerrado, se dibuja un arco con el mismo color y grosor de contorno del PNG (`#141424`). Así no se nota.
-- Para su mamá, el pato Pepe, la vaca y el gato se usan las ilustraciones de `assets/ilustraciones/` tal cual (misma regla: no se redibujan).
+- Para su mamá, el pato Pepe, la vaca y el gato se usan las ilustraciones de `assets/ilustraciones/` tal cual (misma regla: no se redibujan). Se animan con `escenas/personaje.py` (`"mama"`, `"vaca"`, `"gato"`, `"pepe"`): respiración, parpadeo sobre los ojos reales (cajas medidas en el PNG), saltitos con squash, `grito()` (squash & stretch del MUUU o el CUAC), vaivén, y para Pepe `ondas()` y `salpicadura()` del charquito.
 - Si falta una pose que no se pueda lograr transformando el PNG (Pinti de perfil, sentado, de espaldas, etc.), **no se inventa**: se le piden a Wal los archivos.
 
 ### Poses disponibles (`pinti.sprite` / `pinti.dibujar`)
@@ -79,11 +79,11 @@ Referencia de sensación: cuento ilustrado que respira. No es el look de Pifio (
 
 **Pinti**
 - **Respiración** siempre activa: escala vertical ±1,6 % a 0,85 Hz, compensada en horizontal, con el pivote en los pies.
-- **Parpadeo:** dura unos 0,16 s y se repite cada 3,3 s; uno de cada tres es doble (`pinti.parpadeo_auto`). Si hay varios personajes, se desfasan con `semilla`.
+- **Parpadeo:** dura unos 0,16 s y se repite cada 3,3 s; uno de cada tres es doble (`pinti.parpadeo_auto`). Si hay varios personajes, se desfasan con `semilla`. **Guiño:** `parpadeo=(0.0, v)` cierra solo el ojo derecho (0,25 s).
 - **Mirada:** los ojos se desplazan hasta un 12 % hacia lo que importa (la letra, la página) antes de que pase la acción.
 - **Saltos:** anticipación (squash 0,05) → salto → aterrizaje con squash amortiguado (`pinti.aterriza`). La sombra de suelo acompaña.
 - **Entradas:** desde fuera del cuadro con rebote suave (`pinti.entrada`, ease-out-back 1,3). Nunca "aparece" de golpe.
-- **Al trazar:** Pinti se inclina unos 35° y lleva su punta pegada al trazo (`pinti.pies_para_punta`). Nunca boca abajo.
+- **Al trazar:** Pinti lleva su punta pegada al trazo (`pinti.pies_para_punta`) y su cuerpo va **detrás del avance** para no tapar lo que aún no se ha trazado: inclinación con `pinti.inclinacion_trazo(ang)` (máx. ±55°, suavizada frame a frame). Nunca boca abajo. En planos macro, Pinti no pasa de 1,4 veces el alto de la letra.
 
 **Texto**
 - **Entrada pop:** escala 0,6 → 1 con ease-out-back (≈ 0,38 s), giro de -4° a 0° y alfa rápido. Después respira (±1,2 %).
@@ -91,9 +91,12 @@ Referencia de sensación: cuento ilustrado que respira. No es el look de Pifio (
 - **Bocadillos** blancos y redondos, con la cola hacia quien habla y entrada pop. Las voces de niño van siempre en bocadillo; la narradora, en texto libre.
 
 **Cámara y planos**
-- **Ningún plano queda quieto:** cámara viva con zoom que respira (±0,8 %) y deriva lenta de ±6 px (`base.camara_viva`), o push-in continuo sobre las páginas.
+- **Ningún plano queda quieto:** cámara viva con zoom que respira (±0,8 %) y deriva lenta de ±6 px (`base.camara_viva`), o push-in continuo sobre las páginas. `camara_viva` calcula sola el zoom mínimo para que nunca se vea el borde del lienzo.
+- **Nunca negro por transparencia:** cada fotograma se escribe al vídeo con `base.aplanar(frame)` (compone sobre crema). Un píxel transparente convertido con `.convert("RGB")` sale negro.
 - **Páginas reales:** entran enteras y legibles, luego push-in suave (`pagina.render`), sin pasar de 1,25x salvo que se quiera leer una fila. Al terminar el push-in sigue avanzando un 1 % por segundo.
-- **Portada:** entra deslizándose con un tilt 3D de 14° → 0° y luego respira entre 1,00 y 1,03 (`pagina.portada_entra`).
+- **Portada:** entra deslizándose con un tilt 3D de 14° → 0° y luego respira entre 1,00 y 1,03 (`pagina.portada_entra`). En vídeos donde "nada gira" (ASMR) se usa `tilt=False`: entra en plano con pop 0,96 → 1,00.
+- **Cámara libre sobre la página** (`pagina.camara` + `pagina.mover_camara`): paneos, panorámicas verticales y macros con fotogramas clave (foco en px de la página, escala). Zoom en escala logarítmica y ease in-out; nunca gira. **Macro máximo: 4,5 px de pantalla por px de página** (la página mide 1084 px; más allá se ve borrosa). La página real solo se modifica con lo que hace el niño: trazo naranja encima (`trazo.render_tiempos`) y color de crayón (`pagina.colorear`, que respeta el contorno negro).
+- **Trazos sobre la página real:** las cajas de las letras punteadas de la pág. 20 están medidas sobre sus puntos (`trazo.pag20_M_fila1(i)`, `pag20_m_fila3(i)`, `PAG20_MAMA`) y las letras de imprenta se construyen con `trazo.letra_M / letra_m / letra_a / tilde`. Para otras páginas se miden igual (centros de los puntos con `scipy.ndimage`), nunca a ojo.
 - **Transiciones sin negro** (`escenas/transiciones.py`): barrido de crayón naranja, círculo que se abre con aro naranja, deslizamiento con rebote o fundido cruzado. Duran 0,25–0,45 s. **Prohibido el fade desde negro o a negro**, y también el corte a un frame vacío. El vídeo acaba en corte seco sobre un plano vivo.
 - **Easings:** ease-out (`sale`) para lo que llega, ease-in-out (`suave`) para cámara y push-in, ease-out-back (`rebote_atras`) para pops. Nada lineal salvo los trazos de letra, que van con un ease-out ligero.
 - **Ritmo:** algo nuevo cada 1–2 s, y cada acción visible empieza en el frame de su sonido.
@@ -130,6 +133,17 @@ Fondos y decoración pueden ocupar toda la pantalla. Texto, letras que se enseñ
 ## 9. Cómo se usa la biblioteca
 ```python
 import sys; sys.path.insert(0, "pinti-organico/marca")
-from escenas import base, pinti, fondos, pagina, trazo, texto, transiciones, efectos
+from escenas import base, pinti, personaje, fondos, pagina, trazo, texto, transiciones, efectos
 ```
-Pruebas visuales: `python3 pinti-organico/marca/escenas/_pruebas/probar.py` (genera un JPG por escena en `_pruebas/`).
+| Módulo | Qué tiene |
+|---|---|
+| `base` | lienzo, paleta `P`, `fuente`, easings, `sombra_suave`, `sombra_suelo`, `camara_viva`, `aplanar`, `guia_zona_segura` |
+| `pinti` | `dibujar` (poses, respiración, parpadeo, salto, squash), `entrada`, `aterriza`, `pies_para_punta`, `inclinacion_trazo` |
+| `personaje` | mamá, vaca, gato y Pepe desde sus PNG: `dibujar`, `saltitos`, `grito`, `ondas`, `salpicadura` |
+| `fondos` | `crema`, `cuarto`, `mesa`, `cielo`, `pizarra` (`render(t, tipo)`) |
+| `pagina` | `render` (push-in), `camara` + `mover_camara`, `a_pantalla`, `recorte`, `lupa`, `portada_entra`, `mascara_zona` + `colorear` |
+| `trazo` | `render` (tiempos iguales), `render_tiempos` (tiempos del guion), `letra_b/d/M/m/a`, `tilde`, cajas de la pág. 20 |
+| `texto` | `titulo` (pop), `karaoke` (una o varias palabras activas), `bocadillo`, `silaba`, `fila_silabas` |
+| `efectos` | `estrellas_logre`, `chispas`, `interrogacion`, `bombilla`, `corazones`, `check`, `destello`, `letra_cae` |
+| `transiciones` | `barrido_crayon`, `circulo`, `deslizar`, `cruzado` (`render(a, b, u, tipo)`) |
+Pruebas visuales: `python3 pinti-organico/marca/escenas/_pruebas/probar.py` (genera un JPG por escena en `_pruebas/`). Primer fotograma de referencia de cada episodio: `python3 pinti-organico/marca/escenas/_pruebas/frames0.py` (escribe `episodios/<slug>/arte_frame0.jpg`).

@@ -92,12 +92,13 @@ def _ojo_cerrado(w, h):
 
 
 def _ojos(cuerpo, parpadeo=0.0, mirar=(0.0, 0.0)):
-    """Aplica parpadeo (0 abierto..1 cerrado) y mirada (dx,dy en -1..1) a los ojos del PNG original."""
-    if parpadeo <= 0.02 and mirar == (0.0, 0.0):
+    """Aplica parpadeo (0 abierto..1 cerrado, o tupla (izq, der) para guiñar) y mirada (dx,dy en -1..1) a los ojos del PNG original."""
+    pp = parpadeo if isinstance(parpadeo, tuple) else (parpadeo, parpadeo)   # (izq, der): guiño = (0, 1)
+    if max(pp) <= 0.02 and mirar == (0.0, 0.0):
         return cuerpo
     out = cuerpo.copy()
     naranja = rgb(P["pinti"])
-    for caja in (OJO_IZQ, OJO_DER):
+    for caja, parpadeo in zip((OJO_IZQ, OJO_DER), pp):
         x0, y0, x1, y1 = caja
         ojo = cuerpo.crop(caja)
         w, h = ojo.size
@@ -250,3 +251,15 @@ def entrada(t, t0, dur=0.6, desde=-500, hasta=0):
 def aterriza(t, t0):
     """Squash amortiguado tras aterrizar en t0 (pásalo a `squash`)."""
     return 0.12 * muelle(t, t0, frec=3.0, amort=7.0)
+
+
+def inclinacion_trazo(ang, limite=55.0, suave_de=None, k=0.25):
+    """Inclinación (°) para que, al trazar, el cuerpo de Pinti quede DETRÁS del avance (no tapa lo que se dibuja); ang = dirección del trazo en grados (la que devuelve trazo.punto_en / render_tiempos). Nunca boca abajo."""
+    dx, dy = math.cos(math.radians(ang)), math.sin(math.radians(ang))
+    inc = math.degrees(math.atan2(-dx, -dy))            # cuerpo opuesto al movimiento
+    if abs(inc) > 90:                                   # si baja, el cuerpo iría arriba: lo dejamos al lado (35°)
+        inc = math.copysign(35.0, inc if abs(dx) > 0.15 else 1.0)
+    inc = max(-limite, min(limite, inc))
+    if suave_de is not None:                            # suavizado frame a frame (pasa la inclinación anterior)
+        inc = suave_de + (inc - suave_de) * k
+    return inc

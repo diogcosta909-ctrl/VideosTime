@@ -166,3 +166,96 @@ def letra_d(cx, cy, alto=520):
     barriga = arco(x - r * 0.95, by, r, r, -40, -320, n=110)
     palito = linea((x, top), (x, base))
     return [(barriga, 1, (-1, -1)), (palito, 2, (-1, -1))]
+
+
+# --- Letras de imprenta en una caja (x0, y0, x1, y1), en cualquier sistema de coordenadas ------
+def letra_M(caja, pico=0.69):
+    """M mayúscula del libro (pág. 20): 1 palito izquierdo de arriba abajo; 2 desde el mismo punto, diagonal al pico de la V, diagonal arriba y recto abajo por la derecha."""
+    x0, y0, x1, y1 = caja
+    xm, yv = (x0 + x1) / 2, y0 + (y1 - y0) * pico
+    palito = linea((x0, y0), (x0, y1))
+    zigzag = unir(linea((x0, y0), (xm, yv), 40), linea((xm, yv), (x1, y0), 40), linea((x1, y0), (x1, y1), 50))
+    return [(palito, 1, (-1, -1)), (zigzag, 2, (1, -1))]
+
+
+def letra_m(caja, arranque=0.38):
+    """m minúscula del libro (pág. 20): 1 palito; 2 desde el punto verde del palito sube, primer puente y baja; 3 igual desde el palito del medio."""
+    x0, y0, x1, y1 = caja
+    xm = (x0 + x1) / 2
+    h = y1 - y0
+    r = (xm - x0) / 2
+    ys = y0 + h * arranque                     # punto verde, a media altura del palito
+    palito = linea((x0, y0), (x0, y1))
+
+    def puente(xa, xb):
+        rr = (xb - xa) / 2
+        return unir(linea((xa, ys), (xa, y0 + rr * 0.9), 12),
+                    arco(xa + rr, y0 + rr * 0.9, rr, rr * 0.9, 180, 360, 40),
+                    linea((xb, y0 + rr * 0.9), (xb, y1), 30))
+    return [(palito, 1, (-1, -1)), (puente(x0, xm), 2, (-1, 1)), (puente(xm, x1), 3, (-1, 1))]
+
+
+def letra_a(caja):
+    """a del libro (pág. 14): 1 redondo desde arriba a la derecha hacia la izquierda (antihorario) hasta cerrarse; 2 palito de arriba abajo por la derecha."""
+    x0, y0, x1, y1 = caja
+    xp = x1                                  # palito a la derecha
+    rx, ry = (xp - x0) / 2, (y1 - y0) / 2
+    cx, cy = x0 + rx, y0 + ry
+    redondo = arco(cx, cy, rx * 0.98, ry, -40, -400, 110)   # ángulos de pantalla: negativo = sube por arriba hacia la izquierda
+    palito = linea((xp, y0), (xp, y1))
+    return [(redondo, 1, (1, -1)), (palito, 2, (1, -1))]
+
+
+def tilde(p_arriba_der, p_abajo_izq):
+    """Tilde corta e inclinada: de arriba a la derecha hacia abajo a la izquierda."""
+    return [(linea(p_arriba_der, p_abajo_izq, 20), 1, (1, -1))]
+
+
+def render_tiempos(lienzo, t, trazos, tiempos, color=None, grosor=26, escala=1.0, guia=False, badges=True,
+                   flecha_on=True):
+    """Como render() pero cada trazo con su (t_ini, t_fin) exacto del guion; devuelve (punta, apoyada, ang) para sincronizar a Pinti (pinti.inclinacion_trazo(ang)) y el scratch."""
+    color = color or P["pinti"]
+    d = ImageDraw.Draw(lienzo)
+    if guia:
+        for pts, _n, _l in trazos:
+            punteado(d, pts, radio=5 * escala, paso=20 * escala)
+    punta, apoyada, ang = None, False, 90.0
+    for (pts, n, lado), (ti, tf) in zip(trazos, tiempos):
+        u = sale(clamp((t - ti) / max(1e-6, tf - ti)), 1.3)
+        if u > 0:
+            solida(d, sub(pts, u), color, grosor * escala)
+        if ti <= t <= tf:
+            (punta, ang), apoyada = punto_en(pts, min(1.0, u)), True
+    for (pts, n, lado), (ti, tf) in zip(trazos, tiempos):
+        if badges:
+            ap = clamp((t - (ti - 0.2)) / 0.2)
+            if ap > 0:
+                punto_inicio(d, pts[0][0], pts[0][1], n, escala, ap, lado=lado)
+        if flecha_on and ti < t < tf:
+            u = sale(clamp((t - ti) / (tf - ti)), 1.3)
+            (fx, fy), ang = punto_en(pts, min(1.0, u + 0.04))
+            flecha(d, fx, fy, ang, "#FFFFFF", tam=20 * escala, opac=0.9)
+    if punta is None:  # entre trazos: la punta espera sobre el inicio del siguiente trazo (en el aire)
+        sig = [(pts, ti) for (pts, _n, _l), (ti, _tf) in zip(trazos, tiempos) if ti > t]
+        if sig:
+            punta = sig[0][0][0]
+    return punta, apoyada, ang
+
+
+# --- Pág. 20 real ("La M de mamá"): cajas medidas sobre los puntos de assets/paginas/pagina-20.jpg (px de la página) ---
+def pag20_M_fila1(i):
+    """Caja de la i-ésima M punteada (0..8) de la fila 1 de la pág. 20."""
+    x = 194 + 89.9 * i
+    return (x, 487, x + 55, 558)
+
+
+def pag20_m_fila3(i):
+    """Caja de la i-ésima m punteada (0..8) de la fila 3 de la pág. 20."""
+    x = 190 + 85.5 * i
+    return (x, 727, x + 50, 762)
+
+
+PAG20_MAMA = {  # "Mamá" punteada de la fila 6
+    "M": (354, 1000, 408, 1071), "a1": (419, 1036, 453, 1071), "m": (466, 1035, 516, 1071),
+    "a2": (527, 1036, 561, 1071), "tilde": ((554, 1012), (541, 1029)),
+}
