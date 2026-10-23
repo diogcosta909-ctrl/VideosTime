@@ -31,3 +31,36 @@ He comparado el guion con `assets/paginas/pagina-20.jpg`.
 - **Tilde (l. 36)**: "de arriba abajo" → "**de arriba a la derecha hacia abajo a la izquierda, corta e inclinada**", como la "á" de la página.
 - **Coherencia (l. 7)**: "Dice dos frases y nada más" → "**Dice un susurro "mmm" (3,10) y dos frases, nada más.**" Ahora mismo contradice la escaleta.
 - La frase "Así practica tu hijo, solito." es apropiada. Los textos en pantalla no tienen faltas de ortografía ni de acentos.
+
+## Crítico — guion
+
+He revisado el guion con los cambios de la pedagoga aplicados (incluidos los de su 2.ª revisión: dirección de la "a", tilde y coherencia de la l. 7). Lo he comparado con `assets/paginas/pagina-20.jpg`, `BRIEF.md`, el plan (idea 4) y `memoria/reglas.md`. Apliqué las reglas del Guionista y los criterios que el crítico ya aplicó en esta tanda (ep. 01 y 02): gancho legible sin sonido desde el frame 0, cierre ≤ 4 s que diga qué es el producto ("libro imprimible · 3 a 6 años"), que nada gire y zona segura en y=250–1440. `ganadores.md` y `aprendizajes.md` no tienen datos, así que uso el listón base. Todavía no hay vídeo: no he medido fotogramas ni loudness.
+
+Comprobado en la pág. 20: la M en 2 trazos y la m en 3 trazos con punto verde, la fila 1 con 9 M punteadas (hay de sobra para una 5.ª sin trazar en el loop), la fila 3 de m, la fila "Mamá", "Colorea a mamá" y las 3 estrellas de "¡Lo logré!". El texto "La M suena mmm, ¡como algo muy rico!" existe en la página. Los trazos del guion coinciden con la página.
+
+| # | Punto | Nota | Motivo |
+|---|---|---|---|
+| 1 | Gancho 0–1 s | 7 | No hay intro. Desde el frame 0 hay un macro de la M real con la punta ya apoyada y el trazo en marcha, y eso funciona como satisfying. Pero el texto, "Sube el volumen 🔊", solo sirve a quien tiene sonido. Quien ve en silencio (muchos en Reels) lee una orden genérica que no dice nada del ángulo ni de su hijo. Es legible desde el frame 0, pero vacío sin sonido. El emoji además puede no renderizarse con PIL. |
+| 2 | Retención | 7 | De 0 a 16 s está muy bien: hay un trazo nuevo cada 0,4–1,1 s, el "mmm" llega a 3,1 s, hay cambios de plano a 6,65, 9,8 y 12,6 y las estrellas cierran. Pero el cierre (página completa, portada y link) va de **16,0 a 22,0 = 6 s**, más el puente de 1,8 s. Son casi 8 s sin satisfying, justo donde el formato vive del bucle. Supera el máximo de 4 s. |
+| 3 | Claridad del producto | 5 | Ni la voz ni el texto dicen que es un libro, que es imprimible ni para qué edad. "Lo encuentras en el link de mi perfil" no dice qué es "lo" (es el mismo fallo que se devolvió en el ep. 02). El nombre del libro solo aparece en la portada, y con tilt. Sin sonido, un padre podría pensar que es una app de trazos. |
+| 4 | Emoción | 7 | El crayón que se relame con el "mmm", la mamá que parpadea y las estrellas son tiernos. "Así practica tu hijo, solito." toca el deseo del padre. Pero la emoción es satisfacción más que identificación, y llega tarde. |
+| 5 | Compartible/guardable | 7 | El satisfying se reengancha bien. "La M en orden correcto" es útil para guardarla, pero nada pide guardarlo y esa utilidad no se enuncia en pantalla (está solo en el A/B 2). |
+| 6 | Cumplimiento del brief | 7 | **Cumple:** LATAM, sin precio, sin voz de niño (correcto: no hay frases de niño), Liz solo en el susurro y el CTA, sin fades a negro, corte seco al frame 0, página real legible, trazo de una sola línea fiel al libro, scratch sincronizado por trazo y niveles fijados (voz ≈ -14 LUFS y SFX 10–14 dB por debajo). **Falla:** (a) la zona segura dice "y=250–1450" y también "nada en el 25 % inferior" (y ≥ 1440): es la misma contradicción que en el ep. 01. Tiene que ser 1440. (b) En 18,6 la portada entra "con un tilt 3D ligero": el título de la portada se deforma y rota en perspectiva, y eso choca con "nada gira". (c) En 16,0 dice "todas las filas trazadas en naranja", pero solo se trazaron 4 M de la fila 1, 1 m y "Mamá", y el puente de loop necesita la 5.ª M sin trazar. Así el animador tiene una contradicción y la página que se muestra no sería honesta. (d) El cierre supera los 4 s. |
+
+**Media: (7 + 7 + 5 + 7 + 7 + 7) / 6 = 6,7** · Punto 6 = 7
+
+### Veredicto: DEVUELTO
+
+### Cambios concretos
+
+1. **Guionista: cierre ≤ 4 s que diga qué es el producto.** Sustituir 16,0–22,0 por un tramo de 16,0 a 19,8. De 16,0 a 17,4, zoom out continuo hasta la pág. 20 completa, sin quedarse quieta. A 17,4 la portada entra deslizándose en plano, delante de la página. Liz (16,1–19,6): **"Libro imprimible, de 3 a 6 años. Así practica solito."** (9 palabras, ≈3,5 s; la pedagoga revisa la frase). En pantalla, sobre la portada y dentro de y=1150–1400: **Aprende a leer y escribir con Pinti** · **Libro imprimible · 3 a 6 años** · **Link en mi perfil**. Se quita "Lo encuentras en el link de mi perfil". El puente de loop pasa a 19,8–21,6 y el total queda en ≈21,6 s, dentro del rango.
+2. **Guionista y montaje: gancho que funcione sin sonido.** En el frame 0 van dos líneas a la vez, sin aparecer por partes: grande, **"La M, trazo a trazo"** (y≈330), y debajo, más pequeña, **"Sube el volumen"** (sin emoji). Se mantienen hasta 2,6 s. El A/B 3 ("Tu hijo puede hacer esto solito") queda como test.
+3. **Guionista: arreglar la zona segura.** Todo el texto debe ir entre y=250 e **y=1440**, con margen derecho de 140 px. Hay que borrar el "1450".
+4. **Guionista y animador: nada gira.** La portada entra con un slide plano y un pop de escala (de 0,96 a 1,00) y después respira (de 1,00 a 1,03). Sin tilt 3D ni perspectiva. El título siempre recto.
+5. **Guionista: coherencia de la página final.** En 16,0, cambiar "con todas las filas trazadas en naranja" por **"con las 4 primeras M de la fila 1, la primera m de la fila 3 y 'Mamá' trazadas en naranja, mamá coloreada y el resto punteado"**. Así coincide con la 5.ª M sin trazar del puente de loop.
+6. **Guionista: disparador de guardado.** Solo en pantalla y pequeño, en y≈300 entre 9,8 y 12,6 (fila "Mamá", que ahora no tiene texto): **"Guárdalo: la M en el orden correcto"**. Que se disuelva en el sitio.
+
+### Notas (no bloquean)
+- **Sonido:** el susurro "mmm" debe ser una toma aparte de Liz desde el principio, no un TTS de "Mmmm…", que suele sonar robótico. Hay que pedir 2 tomas y elegir la mejor. Al acortar el cierre, el "pop" del texto y el roce de página quedan bajo la voz, entre 10 y 14 dB por debajo.
+- **Montaje:** el frame 0 y el último tienen que coincidir en encuadre y pose. Se comprobará extrayendo ambos con ffmpeg y comparándolos.
+- **Verificación en vídeo final (crítico):** se extraerán el frame 0, los frames de 1,0 s, 3,3 s ("mmm"), 16,5 s (página completa) y 19,5 s (portada) y el último frame (sin negro y empalme del loop). Se medirán el loudness integrado de la voz (≈ -14 LUFS) y de la mezcla de SFX y room tone (10–14 dB por debajo), y que no haya silencio digital entre trazos.
