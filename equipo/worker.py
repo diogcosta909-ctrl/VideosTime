@@ -21,7 +21,7 @@ REPO_URL = os.environ.get("GITHUB_REPO", "tryingalwaysboom/VideosTime")
 BRANCH = os.environ.get("GITHUB_BRANCH", "main")
 TOKEN = os.environ["GITHUB_TOKEN"]
 REPO = os.environ.get("REPO_DIR", "/data/repo" if os.path.isdir("/data") else "/tmp/repo")
-PRESUPUESTO = float(os.environ.get("PRESUPUESTO_TANDA_USD", "6"))
+PRESUPUESTO = float(os.environ.get("PRESUPUESTO_TANDA_USD", "2.5"))
 HORA_DIARIA = os.environ.get("TANDA_DIARIA_HORA_UTC", "")  # p. ej. "07:00"; vacío = solo con el botón
 N_DIARIO = int(os.environ.get("TANDA_DIARIA_N", "3"))
 ESPERA_APROB_H = float(os.environ.get("ESPERA_APROBACION_HORAS", "48"))
@@ -84,7 +84,7 @@ class Tanda:
         db.tanda(self.id, coste_usd=round(self.gasto.usd, 4))
         return salida, v
 
-    def ciclo(self, aid, tarea, prompt, revisor, ep, rondas=2):
+    def ciclo(self, aid, tarea, prompt, revisor, ep, rondas=1):
         """Trabaja y revisa (máx. rondas). Devuelve el último veredicto."""
         salida, v = self.paso(aid, tarea, prompt, ep)
         for r in range(rondas):
@@ -103,16 +103,24 @@ class Tanda:
     def episodio(self, ep):
         d = f"pinti-organico/episodios/{ep}"
         os.makedirs(os.path.join(REPO, d), exist_ok=True)
+        if existe(f"{d}/guion.md") and existe(f"{d}/revision.md", "APROBADO"):
+            return self.resto_episodio(ep, d)
         self.ciclo("guionista", "Guion", f"Escribe el guion del episodio `{ep}` en {d}/guion.md según el plan "
                    f"pinti-organico/episodios/plan_tanda_{self.id}.md y el BRIEF.", "critico", ep)
-        self.paso("pedagoga", "Revisando lo que se enseña", f"Revisa {d}/guion.md; escribe en {d}/revision.md. "
+        self.resto_episodio(ep, d, desde_guion=True)
+
+    def resto_episodio(self, ep, d, desde_guion=False):
+        if desde_guion:
+            self.paso("pedagoga", "Revisando lo que se enseña", f"Revisa {d}/guion.md; escribe en {d}/revision.md. "
                   "Termina con `VEREDICTO: APROBADO` o `VEREDICTO: CORREGIR` y cambios concretos.", ep, a="guionista")
         subir(f"Guion {ep}")
         db.hallazgo("guionista", "guion", f"Guion de {ep}", detalle="Revisado por crítico y pedagoga",
                     enlace=f"{WEB}/{d}/guion.md", episodio=ep)
-        self.paso("arte", "Brief visual", f"Escribe {d}/arte.md (escenas de pinti-organico/marca/escenas/, paleta, primer "
+        if not existe(f"{d}/arte.md"):
+          self.paso("arte", "Brief visual", f"Escribe {d}/arte.md (escenas de pinti-organico/marca/escenas/, paleta, primer "
                   "fotograma, qué se ve distinto). Si la biblioteca no tiene algo necesario, amplíala y pruébalo.", ep, a="guionista")
-        self.paso("sonido", "Plan de audio", (
+        if not existe(f"{d}/audio/plan.json"):
+          self.paso("sonido", "Plan de audio", (
             f"Lee {d}/guion.md y escribe {d}/audio/plan.json con el formato documentado en equipo/audio.py (líneas de voz, "
             f"sfx con 'linea'+'palabra'+'desfase' o 't', música si el guion la pide). Solo texto que se dice en voz. "
             "No generes nada: el sistema lo hace tras el OK de Wal. Termina con `VEREDICTO: OK`."), ep, a="arte")
@@ -167,18 +175,28 @@ class Tanda:
             db.evento("montaje", "No se generó el vídeo final", episodio=ep)
 
     def correr(self):
+        with db.con() as c:  # al reanudar, el gasto ya hecho cuenta para el presupuesto
+            self.gasto.usd = float(c.execute("select coste_usd from tandas where id = %s", (self.id,)).fetchone()[0])
         db.tanda(self.id, estado="en_curso")
         db.agente("productor", estado="trabajando", tarea=f"Coordinando tanda: {self.n} vídeos")
         tema = f" Tema pedido por Wal: {self.tema}." if self.tema else ""
-        self.paso("creativo", "Cazando virales", (
+        ideas = f"pinti-organico/episodios/ideas_tanda_{self.id}.md"
+        plan = f"pinti-organico/episodios/plan_tanda_{self.id}.md"
+        if not existe(ideas):
+          self.paso("creativo", "Cazando virales", (
             "Busca en la web vídeos virales reales de educación infantil / lectoescritura / ASMR de trazos y trae 8 ideas "
             f"originales. Escribe pinti-organico/episodios/ideas_tanda_{self.id}.md. Publica cada referencia con `hallazgo` "
             f"(solo URLs reales).{tema}"), web=True, a="estratega")
-        salida, _ = self.paso("estratega", "Plan de la tanda", (
+        subir(f"Ideas tanda {self.id}")
+        salida = ""
+        if existe(plan, "```json"):
+            salida = open(os.path.join(REPO, plan), encoding="utf-8").read()
+        else:
+          salida, _ = self.paso("estratega", "Plan de la tanda", (
             f"Con las ideas de pinti-organico/episodios/ideas_tanda_{self.id}.md, ideas_comunidad.md, ganadores.md y "
             f"aprendizajes.md, elige las {self.n} mejores.{tema} Escribe pinti-organico/episodios/plan_tanda_{self.id}.md. "
             "Termina con un bloque ```json con {\"episodios\": [\"slug_1\", ...]} (slugs tipo pinti_org_04_nombre, "
-            "continuando la numeración de pinti-organico/episodios/)."))
+            "continuando la numeración de pinti-organico/episodios/). Pon ese mismo bloque ```json también al final del archivo del plan."))
         eps = (ia.json_final(salida) or {}).get("episodios", [])[:self.n]
         if not eps:
             raise RuntimeError("El estratega no devolvió episodios")
@@ -207,6 +225,13 @@ class Tanda:
             "Actualiza pinti-organico/aprendizajes.md y las reglas de pinti-organico/memoria/reglas.md con lo aprendido "
             "en esta tanda (revisiones del crítico, fallos repetidos). Solo reglas concretas y reales."))
         subir(f"Aprendizajes tanda {self.id}")
+
+
+def existe(ruta, contiene=None):
+    p = os.path.join(REPO, ruta)
+    if not os.path.exists(p):
+        return False
+    return contiene is None or contiene in open(p, encoding="utf-8", errors="replace").read()
 
 
 def libres():

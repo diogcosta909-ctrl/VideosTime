@@ -15,9 +15,9 @@ CLIENTE = anthropic.Anthropic()
 MODELO_BASE = os.environ.get("MODELO_BASE", "claude-haiku-5-5")
 MODELO_TOP = os.environ.get("MODELO_TOP", "claude-sonnet-5-5")
 # Agentes que usan el modelo bueno (el resto, el barato). Se cambia sin tocar código.
-AGENTES_TOP = set(os.environ.get("AGENTES_TOP", "guionista,critico,animador").split(","))
+AGENTES_TOP = set(os.environ.get("AGENTES_TOP", "guionista,animador").split(","))
 WEB_SEARCH = os.environ.get("WEB_SEARCH_TOOL", "web_search_20250305")
-MAX_TURNOS = int(os.environ.get("MAX_TURNOS", "40"))
+MAX_TURNOS = int(os.environ.get("MAX_TURNOS", "18"))
 
 
 def _precio(modelo):
@@ -97,6 +97,20 @@ class Agente:
         texto = re.sub(r"^---\n.*?\n---\n", "", texto, flags=re.S)
         return texto + APENDICE.replace("{web}", ", `web_search`" if web else "")
 
+    @staticmethod
+    def _podar(mensajes, conservar=6):
+        """Los resultados viejos de herramientas se reenvían en cada llamada: se recortan para gastar menos."""
+        for m in mensajes[:-conservar]:
+            if m["role"] != "user" or not isinstance(m["content"], list):
+                continue
+            for b in m["content"]:
+                if isinstance(b, dict) and b.get("type") == "tool_result":
+                    c = b.get("content")
+                    if isinstance(c, list):
+                        b["content"] = "[imagen vista]"
+                    elif isinstance(c, str) and len(c) > 300:
+                        b["content"] = c[:300] + " …[recortado]"
+
     def _accion(self, aid, texto):
         try:
             db.agente(aid, accion=texto[:90])
@@ -118,7 +132,7 @@ class Agente:
         try:
             if nombre == "leer":
                 t = open(self._ruta(x["ruta"]), encoding="utf-8", errors="replace").read()
-                return t if len(t) < 60000 else t[:60000] + "\n…(recortado)"
+                return t if len(t) < 15000 else t[:15000] + "\n…(recortado: lee solo lo necesario)"
             if nombre == "escribir":
                 p = self._ruta(x["ruta"])
                 os.makedirs(os.path.dirname(p), exist_ok=True)
@@ -131,7 +145,7 @@ class Agente:
                 r = subprocess.run(["bash", "-lc", x["comando"]], cwd=self.repo, capture_output=True, text=True,
                                    timeout=min(int(x.get("timeout_s") or 600), 1200))
                 salida = (r.stdout + ("\n[stderr]\n" + r.stderr if r.stderr else ""))
-                return f"exit {r.returncode}\n" + (salida[-12000:] if len(salida) > 12000 else salida)
+                return f"exit {r.returncode}\n" + (salida[-3000:] if len(salida) > 3000 else salida)
             if nombre == "ver_imagen":
                 im = Image.open(self._ruta(x["ruta"])).convert("RGB")
                 im.thumbnail((1000, 1000))
@@ -156,7 +170,7 @@ class Agente:
         modelo = MODELO_TOP if aid in AGENTES_TOP else MODELO_BASE
         herramientas = list(HERRAMIENTAS)
         if web:
-            herramientas.append({"type": WEB_SEARCH, "name": "web_search", "max_uses": 8})
+            herramientas.append({"type": WEB_SEARCH, "name": "web_search", "max_uses": 3})
         sistema = [{"type": "text", "text": self._sistema(aid, web), "cache_control": {"type": "ephemeral"}}]
         mensajes = [{"role": "user", "content": tarea}]
         for _ in range(max_turnos):
@@ -169,8 +183,9 @@ class Agente:
             if isinstance(ult["content"], str):
                 ult["content"] = [{"type": "text", "text": ult["content"]}]
             ult["content"][-1]["cache_control"] = {"type": "ephemeral"}
+            self._podar(mensajes)
             self._accion(aid, "Pensando…")
-            r = CLIENTE.messages.create(model=modelo, max_tokens=16000, system=sistema, tools=herramientas,
+            r = CLIENTE.messages.create(model=modelo, max_tokens=int(os.environ.get("MAX_TOKENS_SALIDA", "6000")), system=sistema, tools=herramientas,
                                         messages=mensajes)
             for b in r.content:
                 if b.type == "server_tool_use" and getattr(b, "name", "") == "web_search":
