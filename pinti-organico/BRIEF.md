@@ -9,6 +9,8 @@ Todos los agentes leen este archivo ANTES de trabajar. Si algo choca con él, ga
 - El niño hace todo **solo** (sin dictados ni actividades guiadas por papá/mamá). Cada actividad cabe en una página. Sin fondos de color bajo los trazos (imprime bien en blanco y negro).
 - Precio: $9 (antes $18). El precio NUNCA se dice en voz; si aparece, solo en pantalla.
 - Link único: https://aprendeconpinti.lovable.app
+- El libro real está en `pinti-organico/assets/` (portada, 88 páginas, ilustraciones y Pinti en PNG). Mira `assets/indice.md` antes de trabajar.
+- **Pinti es un crayón naranja** (ver `assets/pinti.png`). Personajes del libro: su mamá (crayón rosa con lazo), su papá, el pato Pepe, la vaca y el gato. Nunca rediseñes a Pinti.
 - Mercados: Chile, Perú, México, Colombia, Ecuador → español LATAM neutro (prohibido "peque", "vale", "guay", "vosotros").
 
 ## Público
