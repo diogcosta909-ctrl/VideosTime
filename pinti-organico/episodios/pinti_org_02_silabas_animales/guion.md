@@ -30,8 +30,8 @@
 | 6,9 | 8,6 | [VOZ PINTI] "Casi… ¡es mi!" | **mi~~au~~** → queda **mi** | Gag visual: la "a" y la "u" de "miau" se despegan y caen rebotando al suelo. Queda "mi", que encaja letra por letra sobre la tarjeta verde "mi". El gato mira las letras caídas, sorprendido. | plin-plin de las dos letras al caer (una por letra, en el frame de impacto) |
 | 8,6 | 11,0 | [VOZ PINTI] "¡Ahora, la letra de Pepe! ¿Cómo dice esta?" | Cabecera: **Sílabas con M** → **Sílabas con P** · debajo: **p + e = ?** | Al decir "la letra de Pepe", la cabecera gira como una tarjeta y cambia de letra (la P solo se ve, no se nombra). Las tarjetas de la M se apartan y entra sola la tarjeta azul "pe" (pág. 24). Con "¿Cómo dice esta?" Pinti la señala. Pepe entra deslizándose sobre su charquito de agua con las ondas animadas. | flip de la tarjeta + chapoteo suave cuando entra Pepe |
 | 11,0 | 12,0 | [VOZ PEPE] "¡CUAC!" | **CUAC** (letras amarillas que saltan) | Pepe lo dice con todo el pecho y el agua salpica. Pinti se queda congelado medio segundo con los ojos muy abiertos (beat cómico). | splash pequeño, sincronizado con el "CUAC" |
-| 12,0 | 14,6 | [VOZ PINTI] "¡Nooo, Pepe! P con E… ¡PE! ¡Como tu nombre!" | **p + e = pe** → luego **PE·PE** con las dos "pe" resaltadas en azul | Pinti se lleva las manos a la cabeza y luego señala la tarjeta. Al decir "tu nombre", aparece "PE·PE" encima de Pepe y cada "pe" se ilumina al pronunciarla. | ding al "¡PE!" + dos tics al iluminarse cada "pe" |
-| 14,6 | 15,8 | [VOZ PEPE] "Pe… ¡PEPE!" | **PEPE** ✔ | Pepe entiende, da una vuelta feliz en el agua y aletea. | sparkle + aleteo suave |
+| 12,0 | 14,6 | [VOZ PINTI] "¡Nooo, Pepe! Dice… ¡pe! ¡Como tu nombre!" | **p + e = pe** (solo visual: se ilumina "p", luego "e" y luego "pe") → luego **pe · pe** en minúscula azul, que se une en **Pepe** | Pinti se lleva las manos a la cabeza y luego señala la tarjeta. Con "Dice…" se iluminan la "p" y la "e" y, con "¡pe!", la "pe". Con "¡Como tu nombre!" aparece "pe · pe" encima de Pepe, las dos sílabas se acercan y se juntan en "Pepe". | ding al "¡pe!" + dos tics al aparecer cada "pe" + pop suave al juntarse |
+| 14,6 | 15,8 | [VOZ PEPE] "Pe… ¡Pepe!" | **Pepe** ✔ | Pepe entiende, da una vuelta feliz en el agua y aletea. | sparkle + aleteo suave |
 | 15,8 | 18,6 | [VOZ PINTI] "¿Tu hijo lo dice bien… o hace como Pepe?" | **¿Tu hijo lo dice bien… o hace como Pepe?** | Corte a la **pág. 21 real a pantalla completa** con zoom lento sobre "ma me mi mo mu". Cada tarjeta da un pequeño salto en secuencia. Pinti en una esquina (zona segura) le guiña a cámara y Pepe asoma por el borde. | pops muy suaves en cascada, uno por tarjeta |
 | 18,6 | 21,8 | [NARRADORA] "Lo encuentras en el link de mi perfil." | **Aprende a leer y escribir con Pinti** · **Link en el perfil** (bloque centrado en la zona segura, aprox. y=1150–1400, nunca en el tercio inferior) | La pág. 21 se desliza al fondo y entra la **portada real** al frente, con un leve balanceo 3D. Pinti, la vaca, el gato y Pepe se asoman alrededor y saludan. El último frame vuelve a Pinti con la tarjeta "mu" para que el bucle empalme con el inicio. | campanita de la vaca, suave, como cierre |
 
@@ -39,7 +39,7 @@
 
 - **≈ 21,8 s** (dentro del rango 18–25 s).
 - Narradora (Liz): solo el CTA, 8 palabras ≈ 3,1 s a 2,6 palabras/s.
-- Hay una recompensa cómica o visual cada 1,5–3 s: el choque de las tarjetas, el MUUU, el acierto, el gato, la caída de las letras, el cambio a la P, el CUAC, PE·PE y la página real.
+- Hay una recompensa cómica o visual cada 1,5–3 s: el choque de las tarjetas, el MUUU, el truco del "mmm", el gato, la caída de las letras, el cambio a la P, el CUAC, "pe · pe" que se une en "Pepe" y la página real.
 
 ## Notas de voz y sonido
 
@@ -51,6 +51,6 @@
 
 ## Ganchos alternativos (test A/B)
 
-1. **Arranque en frío con la vaca.** [VOZ VACA] "¡MUUUU!" desde el frame 0, con el texto **"Esta vaca ya sabe leer sílabas"**. Después Pinti: "¡Eso! M con U, ¡mu!" y se sigue igual desde 4,6 s.
+1. **Arranque en frío con la vaca.** [VOZ VACA] "¡MUUUU!" desde el frame 0, con el texto **"Esta vaca ya sabe leer sílabas"**. Después Pinti: "¡Mmm… u… ¡mu!", con el truco de la tarjeta "m" vibrando, y se sigue igual desde 4,6 s.
 2. **Para los padres, con dolor.** [NARRADORA] "¿Tu hijo ya junta la M con la U?" con el mismo texto en pantalla, mientras se funden las tarjetas "m" y "u". La vaca entra a 1,8 s.
-3. **Empezar por el error.** [VOZ PEPE] "¡CUAC!" en el frame 0, con el texto **"Pepe no sabe leer su propio nombre"**. Pinti: "¡Nooo, Pepe! Mira…" y flashback rápido a la vaca. Pepe vuelve en el tramo de la P.
+3. **Empezar por el error.** [VOZ PEPE] "¡CUAC!" en el frame 0, con el texto **"Pepe no sabe leer su propio nombre"**. Pinti: "¡Nooo, Pepe! Mira…" y flashback rápido a la vaca. Pepe vuelve en el tramo de la P, con los mismos textos corregidos ("¡Ahora, la letra de Pepe!" / "Dice… ¡pe!"), y la P sin nombrarse en voz.
