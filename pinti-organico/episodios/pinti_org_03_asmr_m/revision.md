@@ -24,3 +24,10 @@ He comparado el guion con `assets/paginas/pagina-20.jpg`.
 
 ### Mejora propuesta (sin alargar el vídeo)
 **Que se oiga el sonido de la letra, no solo su nombre.** La página dice: *La M suena "mmm", ¡como algo muy rico!* En **3,10**, cuando la primera M brilla, la narradora susurra **"mmm"** (unos 0,6 s, en tono ASMR) en lugar del "ding", y aparece en pantalla **"La M suena mmm"** (y≈330, se disuelve a 3,4 s). No suma tiempo, encaja con el formato ASMR y enseña lo más útil para empezar a leer: el sonido de la letra. Así el niño no se queda solo con el nombre "eme".
+
+### 2.ª revisión (guion actualizado contra pág. 20 y pág. 14)
+- Los cambios 1 a 4 están aplicados y son correctos: la diagonal llega al pico de la V, el segundo puente sale del punto verde, "Mamá" se escribe letra a letra y M3 empieza en 4,50. La mejora "mmm" + "La M suena mmm" también está aplicada y es correcta.
+- **"a" (l. 36)**: el orden de "redondo y luego palito" es correcto según la pág. 14 (recuadros 1 y 2), pero falta la dirección, y "la pedagoga lo valida" no le sirve al animador. Cambiar → "**a:** trazo 1, el redondo: empieza en el punto verde de arriba a la derecha, va hacia la izquierda por arriba (en sentido contrario a las agujas del reloj), baja, da la vuelta por abajo y sube hasta cerrarse en el punto de inicio (10,70–10,95). La punta se levanta. Trazo 2, el palito: desde arriba, a la derecha del redondo, baja recto (11,00–11,15)." Hay que aplicarlo igual a la segunda "a" (12,00–12,25 · 12,30–12,45).
+- **Tilde (l. 36)**: "de arriba abajo" → "**de arriba a la derecha hacia abajo a la izquierda, corta e inclinada**", como la "á" de la página.
+- **Coherencia (l. 7)**: "Dice dos frases y nada más" → "**Dice un susurro "mmm" (3,10) y dos frases, nada más.**" Ahora mismo contradice la escaleta.
+- La frase "Así practica tu hijo, solito." es apropiada. Los textos en pantalla no tienen faltas de ortografía ni de acentos.
