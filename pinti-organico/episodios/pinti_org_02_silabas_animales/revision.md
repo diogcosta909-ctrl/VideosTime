@@ -64,3 +64,27 @@ Lo que he comprobado en los assets: los colores y las minúsculas de las tarjeta
 6. **Animador:** en 1,8 Pinti no se "despeina": el viento lo inclina hacia atrás con squash y los ojos apretados. En el cierre, los personajes se asoman sin tapar el título ni el sello "3–6 años" de la portada.
 
 Nota (no bloquea): publicar primero el gancho principal y el A/B 1 (vaca en el frame 0) como test. Cuando vuelva el guion, se revisa otra vez. En el vídeo final se comprobará con ffmpeg el frame 0, la zona segura, que no haya fade, que ninguna letra salga espejada y el loudness (voz ≈ -14 LUFS, SFX 10–14 dB por debajo).
+
+## Crítico — guion, ronda 2
+
+He revisado el guion corregido (≈23,8 s) contra mis cambios de la ronda 1, las mismas páginas reales y la portada, y `memoria/reglas.md`. Están aplicados los seis cambios. La escaleta no tiene huecos de tiempo y las cuentas cuadran: la portada a 640 px de ancho mide ≈905 px de alto (y 260–1165), y el bloque del CTA queda en y 1190–1440. Sigue sin haber vídeo, así que la medición con ffmpeg queda para el montaje.
+
+| # | Punto | Nota | Motivo |
+|---|---|---|---|
+| 1 | Gancho 0–1 s | 8 | Desde el frame 0 se lee la pregunta completa con karaoke y hay acción (el choque de "m"+"u"). Se entiende sin sonido. Para parar al padre sigue siendo algo más débil que el A/B 1, pero ese queda como test. |
+| 2 | Retención | 9 | Hay recompensa cada 1–3 s y las frases caben a ritmo infantil (6, 7 y 8 palabras en 2,3, 3,0 y 3,3 s). El bucle empalma con el inicio. |
+| 3 | Claridad del producto | 9 | La voz dice "libro para imprimir, de 3 a 6 años", con el título exacto en pantalla y los sellos de la portada sin tapar. |
+| 4 | Emoción | 8 | El humor es tierno, el ancla "como tu nombre" funciona y el padre se identifica con "¿o como Pepe?". |
+| 5 | Compartible/guardable | 8 | Tiene un "Guárdalo" con utilidad concreta (el truco del mmm con las 5 sílabas) y una pregunta final que invita a comentar. |
+| 6 | Cumplimiento del brief | 10 | LATAM, sin precio, voces de niño y de animales separadas de Liz, sin fades, páginas reales, SFX 10–14 dB bajo la voz, zona segura definida para todo el texto y la regla "ninguna letra gira" aplicada a todo el vídeo. |
+
+**Media: (8 + 9 + 9 + 8 + 8 + 10) / 6 = 8,7** · Punto 6 = 10
+
+### Veredicto: APROBADO
+
+### Notas para la producción (no bloquean)
+- **Sonido:** en el texto del TTS de 3,4 s, quitar el "¡" interior que sobra: "Mmm… u… ¡mu!". Revisar que el "mmm" no suene a "eme". Liz se manda con los números en letra, como ya dice el guion.
+- **Animador:** el "Guárdalo" de 16,1 s es pequeño. Que su cuerpo de letra sea de al menos 40 px para que se lea en el móvil. El barrido de cámara de 4,6 s es un desplazamiento lateral y no puede girar el encuadre, porque la tarjeta "mi" va dentro.
+- **Montaje:** en los últimos 0,3 s, la pose de Pinti con "m" y "u" tiene que coincidir con el frame 0 para que el bucle no salte. Los tiempos se ajustan a la duración real de las tomas sin acelerar la voz.
+- **Montaje (en el vídeo final, con ffmpeg):** frame 0 con el texto completo; texto solo entre y 250–1440 y x 60–940; que no haya fade ni negro al principio ni al final; que ninguna letra salga espejada en 8,6 s ni en 6,9 s; y loudness con la voz ≈ -14 LUFS, los SFX 10–14 dB por debajo y nada por encima de la voz.
+- **Publicador:** probar el gancho principal contra el A/B 1 (la vaca en el frame 0).
