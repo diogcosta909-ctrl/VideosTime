@@ -229,6 +229,7 @@ def horario():
 def main():
     db.init()
     preparar_repo()
+    libres()  # limpia estados viejos al arrancar
     print("Equipo Pinti listo.")
     while True:
         try:
