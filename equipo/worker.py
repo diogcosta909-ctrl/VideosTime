@@ -70,7 +70,7 @@ class Tanda:
     def paso(self, aid, tarea, prompt, episodio=None, web=False, a=None):
         if db.cancelada(self.id):
             raise InterruptedError("Tanda cancelada")
-        db.agente(aid, estado="trabajando", tarea=tarea[:60], episodio=episodio)
+        db.agente(aid, estado="trabajando", tarea=tarea[:60], episodio=episodio, accion="Empezando…")
         try:
             salida = self.ag.trabajar(aid, prompt, episodio, web)
         except ia.SinPresupuesto:
@@ -78,7 +78,7 @@ class Tanda:
             raise
         v = ia.veredicto(salida)
         estado = "devuelto" if v in ("DEVUELTO", "CORREGIR") else "error" if v == "ERROR" else "listo"
-        db.agente(aid, estado=estado, tarea=tarea[:60], episodio=episodio)
+        db.agente(aid, estado=estado, tarea=tarea[:60], episodio=episodio, accion=None)
         if a:
             db.evento(aid, f"{tarea}: hecho", a=a, episodio=episodio)
         db.tanda(self.id, coste_usd=round(self.gasto.usd, 4))
@@ -212,7 +212,7 @@ class Tanda:
 def libres():
     for a in ("productor", "creativo", "estratega", "guionista", "pedagoga", "critico", "arte", "sonido",
               "animador", "montaje", "publicador", "community", "analista"):
-        db.agente(a, estado="libre", tarea="")
+        db.agente(a, estado="libre", tarea="", accion=None)
 
 
 def horario():

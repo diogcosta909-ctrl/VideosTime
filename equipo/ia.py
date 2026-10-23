@@ -97,7 +97,24 @@ class Agente:
         texto = re.sub(r"^---\n.*?\n---\n", "", texto, flags=re.S)
         return texto + APENDICE.replace("{web}", ", `web_search`" if web else "")
 
+    def _accion(self, aid, texto):
+        try:
+            db.agente(aid, accion=texto[:90])
+        except Exception:  # noqa: BLE001 - informar nunca debe romper el trabajo
+            pass
+
     def _herramienta(self, aid, nombre, x, episodio):
+        base = lambda r: os.path.basename(r or "")  # noqa: E731
+        if nombre == "leer":
+            self._accion(aid, f"Leyendo {base(x.get('ruta'))}")
+        elif nombre == "escribir":
+            self._accion(aid, f"Escribiendo {base(x.get('ruta'))}")
+        elif nombre == "ejecutar":
+            self._accion(aid, "Ejecutando: " + (x.get("comando") or "")[:60].replace("\n", " "))
+        elif nombre == "ver_imagen":
+            self._accion(aid, f"Mirando {base(x.get('ruta'))}")
+        elif nombre == "listar":
+            self._accion(aid, f"Explorando {x.get('ruta') or '.'}")
         try:
             if nombre == "leer":
                 t = open(self._ruta(x["ruta"]), encoding="utf-8", errors="replace").read()
@@ -152,8 +169,12 @@ class Agente:
             if isinstance(ult["content"], str):
                 ult["content"] = [{"type": "text", "text": ult["content"]}]
             ult["content"][-1]["cache_control"] = {"type": "ephemeral"}
+            self._accion(aid, "Pensando…")
             r = CLIENTE.messages.create(model=modelo, max_tokens=16000, system=sistema, tools=herramientas,
                                         messages=mensajes)
+            for b in r.content:
+                if b.type == "server_tool_use" and getattr(b, "name", "") == "web_search":
+                    self._accion(aid, "Buscando en la web: " + str((b.input or {}).get("query", ""))[:60])
             self.gasto.sumar(modelo, r.usage)
             mensajes.append({"role": "assistant", "content": [b.model_dump(exclude_none=True) for b in r.content]})
             if r.stop_reason == "pause_turn":

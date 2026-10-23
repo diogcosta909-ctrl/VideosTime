@@ -31,7 +31,7 @@ h1{font-family:var(--display);font-weight:600;font-size:clamp(26px,5vw,34px);lin
 @keyframes ping{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--live) 60%,transparent)}100%{box-shadow:0 0 0 9px transparent}}
 .summary{display:flex;flex-wrap:wrap;gap:8px}
 .chip{font-size:13px;font-weight:700;border-radius:999px;padding:4px 11px;background:var(--surface);border:1px solid var(--line);font-variant-numeric:tabular-nums}
-.stage{position:relative;border-radius:18px;overflow:hidden;background:#DCE6EA;border:1px solid var(--line);height:min(72vh,640px);min-height:420px;touch-action:none}
+.stage{margin-bottom:0;position:relative;border-radius:18px;overflow:hidden;background:#DCE6EA;border:1px solid var(--line);height:min(72vh,640px);min-height:420px;touch-action:none}
 #gl{position:absolute;inset:0;width:100%;height:100%;display:block}
 #ov{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .tag,.bubble{position:absolute;left:0;top:0;will-change:transform;white-space:nowrap}
@@ -124,8 +124,6 @@ h2{font-family:var(--display);font-weight:500;font-size:20px;margin:0 0 10px}
 
   <div id="aprob"></div>
 
-  <div class="summary" id="summary"></div>
-
   <section class="ctl" id="ctl" aria-label="Control de la tanda">
     <h2>Nueva tanda</h2>
     <input id="tTema" type="text" placeholder="Tema opcional (ej. la letra P)" maxlength="120">
@@ -136,6 +134,17 @@ h2{font-family:var(--display);font-weight:500;font-size:20px;margin:0 0 10px}
     </div>
     <div id="tInfo" class="tinfo"></div>
   </section>
+
+  <div class="stage" id="stage">
+    <div class="loading" id="loading">Montando la oficina…</div>
+    <canvas id="gl" aria-label="Oficina 3D con las 13 personas del equipo Pinti trabajando en sus salas"></canvas>
+    <div id="ov"></div>
+    <div class="ctrls"><button type="button" id="btnAll">Ver toda la oficina</button></div>
+    <div class="hint">Arrastra para girar · pellizca para acercar · toca a alguien para ver qué hace</div>
+  </div>
+
+  <div class="summary" id="summary"></div>
+
 
   <section class="finds" aria-labelledby="fh">
     <div class="fhead"><h2 id="fh" style="margin:0">Resultados</h2>
@@ -158,16 +167,7 @@ h2{font-family:var(--display);font-weight:500;font-size:20px;margin:0 0 10px}
     <div class="feed" id="feed"><p class="empty">Aún no hay actividad. Aparecerá aquí en cuanto pulses “Nueva tanda”.</p></div>
   </details>
 
-  <details class="acc" id="acc3d">
-    <summary>Oficina 3D <small>(opcional)</small></summary>
-  <div class="stage" id="stage">
-    <div class="loading" id="loading">Montando la oficina…</div>
-    <canvas id="gl" aria-label="Oficina 3D con las 13 personas del equipo Pinti trabajando en sus salas"></canvas>
-    <div id="ov"></div>
-    <div class="ctrls"><button type="button" id="btnAll">Ver toda la oficina</button></div>
-    <div class="hint">Arrastra para girar · pellizca para acercar · toca a alguien</div>
-  </div>
-  </details>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
@@ -235,7 +235,7 @@ function renderSummary(){
   const t=(window._tandas||[])[0];
   const viva=t&&(t.estado==="pendiente"||t.estado==="en_curso");
   const filas=act.map(a=>{const ag=state.agents[a.id]||{},s=stOf(a.id);
-    return `<div class="now"><span class="av" style="background:${a.col}">${esc(a.name[0])}</span><span><b>${esc(a.name)}</b></span><span class="pill" style="--c:var(${ST[s].c})">${esc(ST[s].t)}</span><span class="t" style="grid-column:2/4">${esc(ag.tarea||"")}${ag.episodio?` <span class="room">· ${esc(ag.episodio)}</span>`:""}</span></div>`}).join("");
+    return `<div class="now"><span class="av" style="background:${a.col}">${esc(a.name[0])}</span><span><b>${esc(a.name)}</b></span><span class="pill" style="--c:var(${ST[s].c})">${esc(ST[s].t)}</span><span class="t" style="grid-column:2/4">${esc(ag.accion||ag.tarea||"")}${ag.accion&&ag.tarea?` <span class="room">· ${esc(ag.tarea)}</span>`:""}${ag.episodio?` <span class="room">· ${esc(ag.episodio)}</span>`:""}</span></div>`}).join("");
   $("#summary").innerHTML=`<h2>Ahora</h2>`+(filas||`<p class="empty" style="margin:0">${viva?"Preparando la tanda…":"El equipo está libre. Elige cuántos vídeos y pulsa “Empezar”."}</p>`);
 }
 function renderTeam(){
@@ -246,7 +246,7 @@ function renderTeam(){
       <span class="av" style="background:${a.col}">${esc(a.name[0])}</span>
       <span><span class="name">${esc(a.name)}</span> <span class="room">· ${esc(a.room)}</span></span>
       <span class="pill" style="--c:var(${ST[s].c})">${esc(ST[s].t)}${typeof ag.nota==="number"?" · "+ag.nota+"/10":""}</span>
-      <span class="task">${ag.tarea?esc(ag.tarea)+link(ag.archivo):'<span class="room">Sin tarea ahora mismo</span>'}</span>
+      <span class="task">${ag.tarea?esc(ag.tarea)+(ag.accion?` <span class="room">· ${esc(ag.accion)}</span>`:"")+link(ag.archivo):'<span class="room">Sin tarea ahora mismo</span>'}</span>
       <span class="meta">${ag.episodio?esc(ag.episodio)+" · ":""}${ag.actualizado?ago(ag.actualizado):"Todavía no ha trabajado"}</span>
       ${sel?`<span class="hist">${hist.length?hist.map(evHtml).join(""):'<span class="empty">Sin historial todavía.</span>'}</span>`:""}
     </button>`}).join("");
@@ -546,7 +546,7 @@ window.office=(function(){
   function sync(){
     for(const a of AG){const s=stOf(a.id),ag=state.agents[a.id]||{},b=bubs[a.id];
       const show=(s!=="libre"&&(ag.tarea||ST[s].ic))||state.sel===a.id;b.hidden=!show;b.classList.toggle("sel",state.sel===a.id);
-      if(show){b.innerHTML=(ST[s].ic?`<span class="ic" style="background:${ST[s].hex}">${ST[s].ic}</span>`:"")+esc(ag.tarea||ST[s].t)}
+      if(show){b.innerHTML=(ST[s].ic?`<span class="ic" style="background:${ST[s].hex}">${ST[s].ic}</span>`:"")+esc(ag.accion||ag.tarea||ST[s].t)}
       a.working=s==="trabajando"||s==="revisando"}
     redraw(office_tv);if(kanbanTex)redraw(kanbanTex);
   }
