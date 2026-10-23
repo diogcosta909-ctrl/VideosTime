@@ -157,8 +157,8 @@ def sprite(t, pose="saluda", parpadeo=None, mirar=(0.0, 0.0), brazo_i=None, braz
         ai = -24 + 3 * math.sin(t * 2 * math.pi * 1.2)   # la mano izquierda (ya levantada) apunta recto arriba
         ad = 2 * math.sin(t * 1.5)
     elif pose == "ríe":
-        ai = -20 + 6 * math.sin(t * 2 * math.pi * 3)
-        ad = 25 + 6 * math.sin(t * 2 * math.pi * 3 + 1)
+        ai = 105 + 8 * math.sin(t * 2 * math.pi * 6)      # manos bajas a los lados de la barriga
+        ad = -30 - 8 * math.sin(t * 2 * math.pi * 6 + 0.6)
     else:
         ai = 2 * math.sin(t * 1.4)
         ad = 2 * math.sin(t * 1.4 + 1)
@@ -197,6 +197,9 @@ def dibujar(lienzo, t, x, y_pies, alto=620, pose="saluda", respira=True, rebote=
         by = -abs(math.sin(math.pi * fase)) * rebote
         if fase < 0.12 or fase > 0.88:
             sq += 0.05
+    if pose == "ríe":  # risa: el cuerpo vibra con un vaivén rápido y pequeño
+        inclina += 3.0 * math.sin(t * 2 * math.pi * 5)
+        sq += 0.02 * abs(math.sin(t * 2 * math.pi * 5))
     sx = k * (1 - r * 0.6 + sq * 0.8)
     sy = k * (1 + r - sq)
     nw, nh = max(1, int(sp.width * sx)), max(1, int(sp.height * sy))
