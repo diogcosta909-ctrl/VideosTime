@@ -20,4 +20,15 @@ Lee primero `pinti-organico/BRIEF.md`. Crea una lista de tareas visible y ve mar
 4. Solo con el OK de Wal, **pinti-publicador** los programa en Metricool.
 5. Al terminar: commit y push en este repo de todo `pinti-organico/` (sin los .mp4 pesados si superan 50 MB).
 
+## Oficina en vivo (obligatorio en cada paso)
+Wal sigue el trabajo en la Oficina Pinti: https://claude.ai/artifact/UJfjGWYAhuoNPvcGg49ovE
+Con la herramienta `ArtifactData` (url de arriba), en un solo `batch` por cambio:
+- Al EMPEZAR un paso: `update` en `agentes/<id>` → `estado: "trabajando"` (o `"revisando"` para el crítico), `tarea` (qué hace, ≤ 60 caracteres), `episodio` (slug), `actualizado` (ISO UTC actual).
+- Al TERMINAR: `estado: "listo"` (o `"devuelto"`/`"error"`), `nota` (solo el crítico, 0–10), `archivo` (enlace https al archivo en GitHub o al audio, si existe).
+- Esperando a Wal (créditos, aprobación): `estado: "esperando"`.
+- Cada cambio añade un documento en `eventos` (id `e-<AAAAMMDD>-<HHMMSS>-<id>`) con `agente`, `texto`, `ts`, `episodio` y, si pasa el trabajo a otro agente, `a: "<id destino>"` (en la oficina se ve volar el papel de una mesa a otra).
+- Al acabar la tanda, todos vuelven a `estado: "libre"`, `tarea: ""`.
+ids: estratega, guionista, critico, sonido, animador, montaje, publicador. Lee la versión del documento antes de escribir (`if_version`). Solo estados reales: nunca simular actividad.
+- Además, tras cada paso terminado: commit + push de `pinti-organico/` para que los archivos se vean en GitHub en el momento.
+
 Recordatorio: nunca generar imágenes ni vídeo con ElevenLabs; nunca inventar métricas.
