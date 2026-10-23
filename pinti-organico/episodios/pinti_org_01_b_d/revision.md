@@ -60,3 +60,26 @@ Revisado el guion con los cambios de la pedagoga ya aplicados, contra `assets/pa
 8. **Sonido: niveles en el guion.** Añadir una nota: voz ≈ -14 LUFS, SFX y tic-tac entre 10 y 14 dB por debajo, cada scratch alineado al frame del trazo. Sin música bajo el truco, o como mucho a -26 LUFS.
 
 Cuando vuelva el guion con estos cambios, se revisa de nuevo. En el vídeo final se comprobarán fotogramas (frame 0, zona segura, que no haya fade) y loudness con ffmpeg.
+
+## Crítico — guion, ronda 2
+
+He revisado el guion v3 (~19,5 s) contra la ronda 1, la pág. 76 y el `BRIEF.md`. Los 8 cambios pedidos están aplicados.
+
+| # | Punto | Nota | Motivo |
+|---|---|---|---|
+| 1 | Gancho 0–1 s | 9 | La frase entera se ve desde el frame 0, con karaoke, y las letras ya se mueven. Se entiende también sin sonido. |
+| 2 | Retención | 8 | Pasa algo nuevo cada 1–2 s. Ya no está "Mira este truco." y el cierre dura 3,8 s. El tramo sin voz del quiz (1,2 s) lo cubren el tic-tac y la lupa. |
+| 3 | Claridad del producto | 8 | En la portada aparecen el nombre exacto, "3 a 6 años · imprimible" y la pág. 76 legible. Solo va en pantalla, no en la voz, y es suficiente para un orgánico. |
+| 4 | Emoción | 8 | "¡Son iguales!" crea identificación y "¡Ya no me confundo!" con el abrazo y las estrellas da una victoria tierna. El quiz "¿Lo sabe tu hijo?" mete al padre dentro. |
+| 5 | Compartible/guardable | 8 | El truco se aprende en 3 s, aparece "Guárdalo para practicar con tu hijo" y hay un quiz para hacer con el niño. |
+| 6 | Cumplimiento del brief | 10 | LATAM, sin precio, voces de niño bien asignadas, corte seco sin fade, texto entre y=250 y 1440 con margen de 140 px, movimiento constante, niveles fijados (voz ≈ -14 LUFS, SFX entre 10 y 14 dB por debajo, sin música bajo el truco), trazos fieles a la pág. 76 y letras que nunca giran. |
+
+**Media: (9 + 8 + 8 + 8 + 8 + 10) / 6 = 8,5** · Punto 6 = 10
+
+### Veredicto: APROBADO
+
+### Notas menores (no bloquean)
+- **Animador:** en 14,5–15,7 el abrazo pasa en el plano animado, pero las estrellas son de la pág. 76. Hay que resolverlo en un solo plano: sacar la tira "¡Lo logré!" con sus 3 estrellas como recorte, que entra junto a Pinti. No hay que cortar a la página. Mientras dura el abrazo, la b y la d tienen que seguir derechas y legibles, sin que los brazos de Pinti las tapen.
+- **Sonido:** "¡Son iguales!", "¡La d!" y "¡Ya no me confundo!" van con la **misma** voz de niño, por continuidad. El tic-tac del quiz suena sin voz encima, pero debe seguir en el nivel de SFX (≈ -24/-28 LUFS) y no subirlo para llenar el hueco.
+- **Montaje:** en el cierre caben tres líneas entre y≈1150 y 1400. No deben tapar el título de la portada ni a Pinti, y si no caben, mejor reducir la portada que salirse de la zona segura. "Guárdalo para practicar con tu hijo" (y≈300) no puede pisar el texto del quiz.
+- **Verificación en vídeo final (crítico):** se extraerán con ffmpeg el frame 0, los frames de 1,0 s, 11,6 s y 19,4 s, y el último frame (para comprobar que no hay negro). También se medirá el loudness integrado de la voz y de los SFX.
