@@ -53,12 +53,16 @@ def subir(msg):
     if sh("git", "diff", "--cached", "--quiet", check=False).returncode == 0:
         return
     sh("git", "commit", "-q", "-m", msg)
+    err = ""
     for _ in range(3):
         sh("git", "fetch", "-q", "origin", BRANCH)
         sh("git", "rebase", "-q", f"origin/{BRANCH}", check=False)
-        if sh("git", "push", "-q", "origin", f"HEAD:{BRANCH}", check=False).returncode == 0:
+        r = sh("git", "push", "-q", "origin", f"HEAD:{BRANCH}", check=False)
+        if r.returncode == 0:
             return
-    print("No se pudo hacer push")
+        err = (r.stderr or "").strip()[-200:]
+    print("No se pudo hacer push:", err)
+    db.evento("productor", "No pude subir a GitHub (revisa GITHUB_TOKEN con permiso de escritura): " + err)
 
 
 class Tanda:
@@ -225,6 +229,8 @@ class Tanda:
             "Actualiza pinti-organico/aprendizajes.md y las reglas de pinti-organico/memoria/reglas.md con lo aprendido "
             "en esta tanda (revisiones del crítico, fallos repetidos). Solo reglas concretas y reales."))
         subir(f"Aprendizajes tanda {self.id}")
+        db.evento("productor", f"Tanda terminada: {len(buenos)} de {len(eps)} guiones listos"
+                  + ("" if buenos else ". Mira los avisos de fallo en esta lista."))
 
 
 def existe(ruta, contiene=None):
