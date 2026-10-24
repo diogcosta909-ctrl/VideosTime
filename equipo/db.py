@@ -27,6 +27,9 @@ def init():
             create table if not exists tandas (id serial primary key, n int not null default 3, tema text not null default '',
                 estado text not null default 'pendiente', nota text not null default '', coste_usd numeric not null default 0,
                 creada timestamptz default now(), actualizada timestamptz default now());
+            create table if not exists acciones (id bigserial primary key, agente text not null, tipo text not null,
+                titulo text not null, contenido text not null default '', ts timestamptz default now());
+            create index if not exists acciones_ag on acciones (agente, id);
             create table if not exists aprobaciones (id serial primary key, tanda_id int, tipo text not null, titulo text not null,
                 detalle jsonb not null default '{}', creditos int not null default 0, estado text not null default 'pendiente',
                 creada timestamptz default now(), respondida timestamptz);
@@ -115,3 +118,13 @@ def pedir_aprobacion(tid, tipo, titulo, detalle, creditos):
 def estado_aprobacion(aid):
     with con() as c:
         return c.execute("select estado from aprobaciones where id = %s", (aid,)).fetchone()[0]
+
+
+def log_accion(aid, tipo, titulo, contenido=""):
+    """Lo que el agente ve y hace, para la pantalla en directo de la Oficina."""
+    with con() as c:
+        n = c.execute("insert into acciones (agente, tipo, titulo, contenido) values (%s, %s, %s, %s) returning id",
+                      (aid, tipo, titulo[:160], (contenido or "")[:1800])).fetchone()[0]
+        if n % 25 == 0:
+            c.execute("delete from acciones where agente = %s and id < (select id from acciones where agente = %s "
+                      "order by id desc offset 120 limit 1)", (aid, aid))

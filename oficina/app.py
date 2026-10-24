@@ -47,6 +47,9 @@ def init_db():
             create table if not exists tandas (id serial primary key, n int not null default 3, tema text not null default '',
                 estado text not null default 'pendiente', nota text not null default '', coste_usd numeric not null default 0,
                 creada timestamptz default now(), actualizada timestamptz default now());
+            create table if not exists acciones (id bigserial primary key, agente text not null, tipo text not null,
+                titulo text not null, contenido text not null default '', ts timestamptz default now());
+            create index if not exists acciones_ag on acciones (agente, id);
             create table if not exists aprobaciones (id serial primary key, tanda_id int, tipo text not null, titulo text not null,
                 detalle jsonb not null default '{}', creditos int not null default 0, estado text not null default 'pendiente',
                 creada timestamptz default now(), respondida timestamptz);
@@ -163,6 +166,19 @@ def estado():
                  for r in c.execute("select id, tanda_id, titulo, detalle, creditos, estado from aprobaciones "
                                     "order by id desc limit 5")]
     return jsonify(rev=rev, agentes=agentes, eventos=eventos, hallazgos=hallazgos, tandas=tandas, aprobaciones=aprob)
+
+
+@app.get("/api/pantalla/<aid>")
+def pantalla(aid):
+    desde = request.args.get("desde", type=int)
+    with db() as c:
+        if desde:
+            filas = c.execute("select id, tipo, titulo, contenido, ts from acciones where agente = %s and id > %s "
+                              "order by id limit 60", (aid, desde)).fetchall()
+        else:
+            filas = list(reversed(c.execute("select id, tipo, titulo, contenido, ts from acciones where agente = %s "
+                                            "order by id desc limit 25", (aid,)).fetchall()))
+    return jsonify([dict(id=r[0], tipo=r[1], titulo=r[2], contenido=r[3], ts=r[4].isoformat()) for r in filas])
 
 
 @app.post("/api/tanda")

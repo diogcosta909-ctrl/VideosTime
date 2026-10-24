@@ -118,6 +118,30 @@ class Agente:
             pass
 
     def _herramienta(self, aid, nombre, x, episodio):
+        res = self._ejecutar(aid, nombre, x, episodio)
+        try:
+            self._log(aid, nombre, x, res)
+        except Exception:  # noqa: BLE001 - la pantalla en directo nunca debe romper el trabajo
+            pass
+        return res
+
+    def _log(self, aid, nombre, x, res):
+        b = os.path.basename(x.get("ruta") or "")
+        txt = res if isinstance(res, str) else "[imagen]"
+        if nombre == "leer":
+            db.log_accion(aid, "leer", f"Leyendo {b}", txt[:700])
+        elif nombre == "escribir":
+            db.log_accion(aid, "escribir", f"Escribiendo {b}", x.get("contenido", "")[:1800])
+        elif nombre == "ejecutar":
+            db.log_accion(aid, "ejecutar", "Ejecutando comando", "$ " + (x.get("comando") or "")[:400] + "\n" + txt[-600:])
+        elif nombre == "ver_imagen":
+            db.log_accion(aid, "ver", f"Mirando {b}", "")
+        elif nombre == "listar":
+            db.log_accion(aid, "leer", f"Explorando {x.get('ruta') or '.'}", txt[:400])
+        elif nombre == "hallazgo":
+            db.log_accion(aid, "publicar", "Publica en la Oficina: " + str(x.get("titulo", ""))[:100], str(x.get("detalle") or ""))
+
+    def _ejecutar(self, aid, nombre, x, episodio):
         base = lambda r: os.path.basename(r or "")  # noqa: E731
         if nombre == "leer":
             self._accion(aid, f"Leyendo {base(x.get('ruta'))}")
@@ -191,6 +215,12 @@ class Agente:
                 if b.type == "server_tool_use" and getattr(b, "name", "") == "web_search":
                     self._accion(aid, "Buscando en la web: " + str((b.input or {}).get("query", ""))[:60])
             self.gasto.sumar(modelo, r.usage)
+            for b in r.content:
+                if b.type == "text" and b.text.strip():
+                    try:
+                        db.log_accion(aid, "pensar", "Piensa", b.text.strip()[:900])
+                    except Exception:  # noqa: BLE001
+                        pass
             mensajes.append({"role": "assistant", "content": [b.model_dump(exclude_none=True) for b in r.content]})
             if r.stop_reason == "pause_turn":
                 mensajes.append({"role": "user", "content": "Continúa."})
