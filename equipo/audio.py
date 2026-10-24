@@ -27,6 +27,12 @@ CRED_SFX_SEG = float(os.environ.get("CREDITOS_SFX_POR_SEGUNDO", "40"))
 CRED_MUSICA = float(os.environ.get("CREDITOS_MUSICA", "900"))
 
 
+def _ok(r):
+    if r.status_code >= 400:
+        raise RuntimeError(f"ElevenLabs {r.status_code}: {r.text[:200]}")
+    return r
+
+
 def _h():
     return {"xi-api-key": CLAVE}
 
@@ -53,7 +59,7 @@ def _tts(texto, voz, salida):
     r = requests.post(f"{API}/text-to-speech/{voz}/with-timestamps", headers=_h(), timeout=180, json={
         "text": texto, "model_id": MODELO_VOZ,
         "voice_settings": {"stability": 0.45, "similarity_boost": 0.8, "style": 0.35, "speed": 1.08}})
-    r.raise_for_status()
+    _ok(r)
     d = r.json()
     open(salida, "wb").write(base64.b64decode(d["audio_base64"]))
     return d.get("alignment") or d.get("normalized_alignment")
@@ -81,7 +87,7 @@ def _voz_nino():
     if VOZ_NINO:
         return VOZ_NINO
     r = requests.get(f"{API}/voices", headers=_h(), timeout=60)
-    r.raise_for_status()
+    _ok(r)
     for v in r.json().get("voices", []):
         txt = (v.get("name", "") + " " + json.dumps(v.get("labels") or {})).lower()
         if any(k in txt for k in ("child", "kid", "niño", "nino", "boy")):
@@ -145,7 +151,7 @@ def generar(dir_ep):
         r = requests.post(f"{API}/sound-generation", headers=_h(), timeout=180, json={
             "text": s["prompt"], "duration_seconds": max(0.5, min(22.0, float(s.get("duracion") or 1))),
             "prompt_influence": 0.5})
-        r.raise_for_status()
+        _ok(r)
         open(os.path.join(dir_a, archivo), "wb").write(r.content)
         sfx.append({"id": s["id"], "archivo": archivo, "t": round(max(0.0, ts), 3), "duracion": s.get("duracion")})
 

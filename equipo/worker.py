@@ -184,6 +184,10 @@ class Tanda:
         db.tanda(self.id, estado="en_curso")
         db.agente("productor", estado="trabajando", tarea=f"Coordinando tanda: {self.n} vídeos")
         tema = f" Tema pedido por Wal: {self.tema}." if self.tema else ""
+        pend = [] if self.tema else pendientes()
+        if pend:
+            db.evento("productor", f"Retomo {min(len(pend), self.n)} vídeo(s) pendiente(s) sin repetir lo ya hecho")
+            return self.seguir(pend[:self.n])
         ideas = f"pinti-organico/episodios/ideas_tanda_{self.id}.md"
         plan = f"pinti-organico/episodios/plan_tanda_{self.id}.md"
         if not existe(ideas):
@@ -205,6 +209,9 @@ class Tanda:
         if not eps:
             raise RuntimeError("El estratega no devolvió episodios")
         subir(f"Plan de tanda {self.id}")
+        self.seguir(eps)
+
+    def seguir(self, eps):
         buenos = []
         for ep in eps:
             try:
@@ -238,6 +245,17 @@ def existe(ruta, contiene=None):
     if not os.path.exists(p):
         return False
     return contiene is None or contiene in open(p, encoding="utf-8", errors="replace").read()
+
+
+def pendientes():
+    """Vídeos con guion y plan de audio listos que aún no tienen vídeo final."""
+    out = []
+    for plan in sorted(glob.glob(os.path.join(REPO, "pinti-organico/episodios/*/audio/plan.json"))):
+        d = os.path.dirname(os.path.dirname(plan))
+        slug = os.path.basename(d)
+        if not os.path.exists(os.path.join(d, f"{slug}.mp4")):
+            out.append(slug)
+    return out
 
 
 def libres():
