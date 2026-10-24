@@ -21,7 +21,7 @@ REPO_URL = os.environ.get("GITHUB_REPO", "tryingalwaysboom/VideosTime")
 BRANCH = os.environ.get("GITHUB_BRANCH", "main")
 TOKEN = os.environ["GITHUB_TOKEN"]
 REPO = os.environ.get("REPO_DIR", "/data/repo" if os.path.isdir("/data") else "/tmp/repo")
-PRESUPUESTO = float(os.environ.get("PRESUPUESTO_TANDA_USD", "2.5"))
+PRESUPUESTO = float(os.environ.get("PRESUPUESTO_TANDA_USD", "3"))
 HORA_DIARIA = os.environ.get("TANDA_DIARIA_HORA_UTC", "")  # p. ej. "07:00"; vacío = solo con el botón
 N_DIARIO = int(os.environ.get("TANDA_DIARIA_N", "3"))
 ESPERA_APROB_H = float(os.environ.get("ESPERA_APROBACION_HORAS", "48"))

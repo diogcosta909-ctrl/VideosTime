@@ -15,7 +15,7 @@ CLIENTE = anthropic.Anthropic()
 MODELO_BASE = os.environ.get("MODELO_BASE", "claude-haiku-5-5")
 MODELO_TOP = os.environ.get("MODELO_TOP", "claude-sonnet-5-5")
 # Agentes que usan el modelo bueno (el resto, el barato). Se cambia sin tocar código.
-AGENTES_TOP = set(os.environ.get("AGENTES_TOP", "guionista,animador").split(","))
+AGENTES_TOP = set(os.environ.get("AGENTES_TOP", "").split(","))
 WEB_SEARCH = os.environ.get("WEB_SEARCH_TOOL", "web_search_20250305")
 MAX_TURNOS = int(os.environ.get("MAX_TURNOS", "18"))
 
