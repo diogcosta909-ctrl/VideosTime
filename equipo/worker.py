@@ -179,6 +179,11 @@ class Tanda:
             db.evento("montaje", "No se generó el vídeo final", episodio=ep)
 
     def correr(self):
+        if os.environ.get("MODO", "fabrica") == "fabrica":  # sin IA: plantillas + datos del libro
+            from fabrica import tanda as fab
+            db.tanda(self.id, estado="en_curso")
+            fab.correr(self, REPO, subir, WEB)
+            return
         with db.con() as c:  # al reanudar, el gasto ya hecho cuenta para el presupuesto
             self.gasto.usd = float(c.execute("select coste_usd from tandas where id = %s", (self.id,)).fetchone()[0])
         db.tanda(self.id, estado="en_curso")
