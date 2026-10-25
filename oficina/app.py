@@ -13,7 +13,8 @@ import time
 
 import psycopg
 import requests
-from flask import Flask, Response, abort, jsonify, render_template, request
+import io
+from flask import Flask, send_file, Response, abort, jsonify, render_template, request
 from psycopg.types.json import Jsonb
 
 DATABASE_URL = os.environ["DATABASE_URL"]
@@ -53,6 +54,8 @@ def init_db():
             create table if not exists aprobaciones (id serial primary key, tanda_id int, tipo text not null, titulo text not null,
                 detalle jsonb not null default '{}', creditos int not null default 0, estado text not null default 'pendiente',
                 creada timestamptz default now(), respondida timestamptz);
+            create table if not exists videos (nombre text primary key, titulo text not null default '', detalle text not null default '',
+                datos bytea not null, creada timestamptz default now());
         """)
 
 
@@ -179,6 +182,24 @@ def pantalla(aid):
             filas = list(reversed(c.execute("select id, tipo, titulo, contenido, ts from acciones where agente = %s "
                                             "order by id desc limit 25", (aid,)).fetchall()))
     return jsonify([dict(id=r[0], tipo=r[1], titulo=r[2], contenido=r[3], ts=r[4].isoformat()) for r in filas])
+
+
+@app.get("/api/videos")
+def videos():
+    with db() as c:
+        return jsonify([dict(nombre=r[0], titulo=r[1], detalle=r[2], creada=r[3].isoformat(), mb=round(r[4] / 1e6, 1))
+                        for r in c.execute("select nombre, titulo, detalle, creada, length(datos) from videos "
+                                           "order by creada desc limit 100")])
+
+
+@app.get("/video/<nombre>.mp4")
+def video(nombre):
+    with db() as c:
+        f = c.execute("select datos from videos where nombre = %s", (nombre,)).fetchone()
+    if not f:
+        abort(404)
+    return send_file(io.BytesIO(bytes(f[0])), mimetype="video/mp4", conditional=True, as_attachment=bool(request.args.get("dl")),
+                     download_name=f"{nombre}.mp4")
 
 
 @app.post("/api/tanda")

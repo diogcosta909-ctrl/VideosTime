@@ -29,6 +29,8 @@ def init():
                 creada timestamptz default now(), actualizada timestamptz default now());
             create table if not exists acciones (id bigserial primary key, agente text not null, tipo text not null,
                 titulo text not null, contenido text not null default '', ts timestamptz default now());
+            create table if not exists videos (nombre text primary key, titulo text not null default '', detalle text not null default '',
+                datos bytea not null, creada timestamptz default now());
             create index if not exists acciones_ag on acciones (agente, id);
             create table if not exists aprobaciones (id serial primary key, tanda_id int, tipo text not null, titulo text not null,
                 detalle jsonb not null default '{}', creditos int not null default 0, estado text not null default 'pendiente',
@@ -128,3 +130,12 @@ def log_accion(aid, tipo, titulo, contenido=""):
         if n % 25 == 0:
             c.execute("delete from acciones where agente = %s and id < (select id from acciones where agente = %s "
                       "order by id desc offset 120 limit 1)", (aid, aid))
+
+
+def guardar_video(nombre, titulo, detalle, ruta):
+    """Guarda el mp4 en PostgreSQL para verlo y descargarlo desde la Oficina."""
+    with open(ruta, "rb") as f, con() as c:
+        c.execute("insert into videos (nombre, titulo, detalle, datos) values (%s, %s, %s, %s) on conflict (nombre) do update "
+                  "set titulo = excluded.titulo, detalle = excluded.detalle, datos = excluded.datos, creada = now()",
+                  (nombre, titulo[:200], detalle[:200], f.read()))
+        _bump(c)

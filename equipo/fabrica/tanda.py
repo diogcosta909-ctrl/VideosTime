@@ -137,6 +137,7 @@ def correr(tanda, repo, subir, web):
             continue
         json.dump({"plantilla": tipo, "letra": l, "variante": v, **info}, open(os.path.join(carpeta, "meta.json"), "w", encoding="utf-8"),
                   ensure_ascii=False, indent=1)
+        db.guardar_video(nom, info["gancho"], f"{info['duracion']} s · plantilla {tipo}", ruta)
         subir(f"Fábrica: {nom}")
         db.hallazgo("montaje", "video", f"{nom}: {info['gancho']}", detalle=f"{info['duracion']} s · plantilla {tipo}",
                     enlace=f"{web}/pinti-organico/episodios/{nom}/video.mp4", episodio=nom)

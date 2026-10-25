@@ -161,6 +161,11 @@ h2{font-family:var(--display);font-weight:500;font-size:20px;margin:0 0 10px}
   <div class="summary" id="summary"></div>
 
 
+  <section class="finds" aria-labelledby="vh">
+    <h2 id="vh" style="margin:0 0 8px">Vídeos hechos</h2>
+    <div class="fgrid" id="vgrid"><p class="empty">Aquí aparecerá cada vídeo terminado, para verlo y descargarlo.</p></div>
+  </section>
+
   <section class="finds" aria-labelledby="fh">
     <div class="fhead"><h2 id="fh" style="margin:0">Resultados</h2>
       <div class="fil" id="fil" role="group" aria-label="Filtrar">
@@ -711,6 +716,14 @@ async function connect(){
   setTimeout(connect,document.hidden?15000:3000);
 }
 setInterval(()=>{renderTeam();renderFeed();renderFinds()},30000);
+let _vn="";async function cargaVideos(){try{const r=await fetch("/api/videos");const v=await r.json();const k=v.map(x=>x.nombre).join();if(k===_vn)return;_vn=k;
+const g=document.getElementById("vgrid");if(!v.length)return;g.innerHTML="";
+v.forEach(x=>{const d=document.createElement("div");d.className="find";d.style.cssText="padding:10px;display:flex;flex-direction:column;gap:6px";
+const t=document.createElement("b");t.textContent=x.titulo||x.nombre;const m=document.createElement("small");m.textContent=x.nombre+" · "+x.detalle+" · "+x.mb+" MB";
+const vi=document.createElement("video");vi.src="/video/"+encodeURIComponent(x.nombre)+".mp4";vi.controls=true;vi.preload="none";vi.playsInline=true;vi.style.cssText="width:100%;max-height:420px;border-radius:12px;background:#000";
+const a=document.createElement("a");a.href="/video/"+encodeURIComponent(x.nombre)+".mp4?dl=1";a.textContent="⬇ Descargar";a.style.cssText="font-weight:700;padding:10px;text-align:center;border-radius:10px;background:#FC8C44;color:#fff;text-decoration:none";
+d.append(t,m,vi,a);g.append(d)})}catch(e){}}
+cargaVideos();setInterval(cargaVideos,15000);
 renderAll();connect();
 </script>
 
